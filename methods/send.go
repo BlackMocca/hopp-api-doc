@@ -118,9 +118,9 @@ func (c *Collection) sendGET(req Requests) (string, string, string, error) {
 		return "", "", "", fmt.Errorf("error creating request: %w", err)
 	}
 
-	if req.Token != "" {
+	if req.Auth.Token != "" {
 		// Token Auth
-		bearer = "Bearer " + req.Token
+		bearer = "Bearer " + req.Auth.Token
 		reqHTTP.Header.Add("Authorization", bearer)
 	}
 	if req.User != "" && req.Pass != "" {
@@ -188,10 +188,10 @@ func (c *Collection) sendPOST(req Requests, method string) (string, string, erro
 		return "", "", fmt.Errorf("error creating request: %w", err)
 	}
 
-	reqHTTP.Header.Set("Content-Type", req.Ctype) // Set Content type to said Ctype in Collection
-	if req.Token != "" {
+	reqHTTP.Header.Set("Content-Type", req.Body.ContentType) // Set Content type to said Ctype in Collection
+	if req.Auth.Token != "" {
 		// Bearer Auth / Token based Auth
-		var bearer = "Bearer " + req.Token
+		var bearer = "Bearer " + req.Auth.Token
 		reqHTTP.Header.Add("Authorization", bearer)
 	}
 	if req.User != "" && req.Pass != "" {

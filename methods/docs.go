@@ -14,7 +14,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-//FileTrunk handles the buffer for generated README.md File
+// FileTrunk handles the buffer for generated README.md File
 type FileTrunk struct{ bytes.Buffer }
 
 // Name holds the FileName, here README.md
@@ -35,7 +35,7 @@ func (f *FileTrunk) IsDir() bool { return false }
 // Sys - I have no idea
 func (f *FileTrunk) Sys() interface{} { return nil }
 
-//GenerateDocs generates the Documentation site from the hoppscotch-collection.json
+// GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
 	if err != nil {
@@ -50,13 +50,16 @@ func GenerateDocs(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
 		"html": func(val string) string { return val },
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")
-
+	if err != nil {
+		panic(err)
+	}
 	// f will be used to store rendered templates in memory.
 	var f FileTrunk
 

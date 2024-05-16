@@ -1,6 +1,6 @@
 package methods
 
-//Collection hold the structure of the basic `postwoman-collection.json`
+// Collection hold the structure of the basic `postwoman-collection.json`
 type Collection struct {
 	// Name of the Whole Collection
 	Name string `json:"name"`
@@ -27,21 +27,19 @@ type Headers struct {
 // Requests are the Request Model in JSON
 type Requests struct {
 	// Base URL of the Request
-	URL string `json:"url"`
+	URL string `json:"endpoint"`
 	// Path is the enpoint path
 	// URL+PATH = Full URL
 	Path string `json:"path"`
 	// Request Method - GET,POST,PUT,PATCH,DELETE
 	Method string `json:"method"`
 	// Authentication Type - Bearer Token or Basic Auth
-	Auth string `json:"auth"`
+	Auth AuthType `json:"auth"`
 	// Username for Basic Auth
 	User string `json:"httpUser"`
 	// Password for Basic Auth
 	Pass              string `json:"httpPassword"`
 	PasswordFieldType string `json:"passwordFieldType"`
-	// Bearer token
-	Token string `json:"bearerToken"`
 	// Request Headers if any- Key,Value pairs
 	Headers []Headers `json:"headers"`
 	// Params for Get Requests
@@ -53,7 +51,7 @@ type Requests struct {
 	// If RawInputs are used or Not
 	RawInput bool `json:"rawInput"`
 	// Content Type of Request
-	Ctype            string `json:"contentType"`
+	Body             Body   `json:"body"`
 	RequestType      string `json:"requestType"`
 	PreRequestScript string `json:"preRequestScript"`
 	TestScript       string `json:"testScript"`
@@ -65,8 +63,23 @@ type Requests struct {
 	Collection int `json:"collection"`
 }
 
+type AuthType struct {
+	// value enum => none,inherit,bearer
+	AuthType string `json:"authType"`
+
+	AuthActive bool `json:"authActive"`
+
+	// JWT Token on auth type bearer
+	Token string `json:"token"`
+}
+
 // BodyParams include the Body Parameters
 type BodyParams struct {
 	Key   string `json:"key"`
 	Value string `json:"value"`
+}
+
+type Body struct {
+	Body        interface{} `json:"body"`
+	ContentType string      `json:"contentType"`
 }
