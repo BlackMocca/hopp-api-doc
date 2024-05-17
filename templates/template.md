@@ -12,7 +12,7 @@
 
 ---
 
-### {{.Name}}
+### [{{ .Method }}] {{.Name}}
 
 **Method**: {{.Method}}  
 
@@ -43,7 +43,7 @@
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
-    <td>`{{- .value | html}}`</td>
+    <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
     </tr>
     {{-  end}}
     </table>
@@ -105,7 +105,7 @@
 
 ---
 
-### {{ .Name}}
+### [{{ .Method }}] {{ .Name}}
 
 **Method**: {{ .Method}}  
 
@@ -131,14 +131,12 @@
     <table>
     <tr>
     <th>Key</th>
-    <th>Valuessss</th>
+    <th>Value</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
-    <td>
-        `{{- .value | html }}`
-    </td>
+    <td>`{{- if .value }}{{ .value | html }}`{{ else }} {{ end }}</td>
     </tr>
     {{-  end}}
     </table>
