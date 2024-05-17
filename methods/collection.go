@@ -3,6 +3,8 @@ package methods
 import (
 	"encoding/json"
 	"strings"
+
+	"github.com/spf13/cast"
 )
 
 // Collection hold the structure of the basic `postwoman-collection.json`
@@ -56,10 +58,11 @@ type Requests struct {
 	// If RawInputs are used or Not
 	RawInput bool `json:"rawInput"`
 	// Content Type of Request
-	Body             Body   `json:"body"`
-	RequestType      string `json:"requestType"`
-	PreRequestScript string `json:"preRequestScript"`
-	TestScript       string `json:"testScript"`
+	Body             Body              `json:"body"`
+	RequestType      string            `json:"requestType"`
+	PreRequestScript string            `json:"preRequestScript"`
+	TestScript       string            `json:"testScript"`
+	RequestVariable  []RequestVariable `json:"requestVariables"`
 	// Label of Collection
 	Label string `json:"label"`
 	// Name of the Request
@@ -140,4 +143,59 @@ func (b *Body) UnmarshalJSON(data []byte) error {
 	b.Body = tmp.Body
 	b.ContentType = tmp.ContentType
 	return nil
+}
+
+type RequestVariable struct {
+	Key      string            `json:"key"`
+	Value    string            `json:"value"`
+	Examples []ExampleResponse `json:"-"`
+}
+
+func newExampleResponseFromText(key string, response string) *ExampleResponse {
+	splits := strings.Split(key, "_")
+	if len(splits) > 2 && splits[0] == "EXAMPLE" {
+		status := cast.ToInt(splits[1])
+		name := strings.Join(splits[2:], " ")
+
+		if status > 0 && name != "" {
+			return &ExampleResponse{
+				Status:   status,
+				Name:     name,
+				Response: response,
+			}
+		}
+	}
+	return nil
+}
+
+func (b *RequestVariable) UnmarshalJSON(data []byte) error {
+	type bodyData struct {
+		Key   string `json:"key"`
+		Value string `json:"value"`
+	}
+	var tmp = bodyData{}
+
+	if err := json.Unmarshal(data, &tmp); err != nil {
+		return err
+	}
+
+	b.Key = tmp.Key
+	b.Value = tmp.Value
+	if len(b.Examples) == 0 {
+		b.Examples = make([]ExampleResponse, 0)
+	}
+
+	if tmp.Key != "" {
+		if exampleResponse := newExampleResponseFromText(tmp.Key, tmp.Value); exampleResponse != nil {
+			b.Examples = append(b.Examples, *exampleResponse)
+		}
+	}
+
+	return nil
+}
+
+type ExampleResponse struct {
+	Status   int
+	Name     string
+	Response string
 }

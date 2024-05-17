@@ -92,6 +92,7 @@ func GenerateDocs(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println(colls[0].Requests[0].RequestVariable)
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{

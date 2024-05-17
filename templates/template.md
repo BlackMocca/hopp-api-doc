@@ -80,7 +80,7 @@
 
 **SubContentType**: `{{ .Body.ContentType}}` 
 
-**Body**:
+**Request Body**:
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .Body.Body }}
@@ -208,7 +208,7 @@ Password: `{{ .Pass}}`
 
 **ContentType**: `{{ .Body.ContentType}}`
 
-**Body**:
+**Request Body**:
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .Body.Body }}
@@ -256,6 +256,19 @@ Password: `{{ .Pass}}`
     {{- end }}
     </table>
 {{- end -}}
+
+**Example Response**:
+{{- if .RequestVariable }}
+    {{- range .RequestVariable }}
+        {{- if .Examples }}
+            {{- range .Examples }}
+                {{.Status}}
+                {{.Name}}
+                {{.Response}}
+            {{- end }}
+        {{- end }}
+    {{- end}}
+{{- end }}
 
 <!-- 
 **Pre Request Script**: 
