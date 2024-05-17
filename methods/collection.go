@@ -1,5 +1,10 @@
 package methods
 
+import (
+	"encoding/json"
+	"strings"
+)
+
 // Collection hold the structure of the basic `postwoman-collection.json`
 type Collection struct {
 	// Name of the Whole Collection
@@ -82,4 +87,57 @@ type BodyParams struct {
 type Body struct {
 	Body        interface{} `json:"body"`
 	ContentType string      `json:"contentType"`
+}
+
+func (b *Body) UnmarshalJSON(data []byte) error {
+	type bodyData struct {
+		Body        interface{} `json:"body"`
+		ContentType string      `json:"contentType"`
+	}
+	var tmp = bodyData{}
+
+	if err := json.Unmarshal(data, &tmp); err != nil {
+		return err
+	}
+
+	switch {
+	case strings.Contains("multipart/form-data", tmp.ContentType):
+		if tmp.Body != nil {
+			if body, ok := tmp.Body.([]interface{}); ok {
+				for index, valM := range body {
+					isFile := valM.(map[string]interface{})["isFile"].(bool)
+					_, valsIsArray := valM.(map[string]interface{})["value"].([]interface{})
+
+					if valsIsArray && isFile {
+						tmp.Body.([]interface{})[index].(map[string]interface{})["value"] = "Web Browser File"
+						continue
+					}
+				}
+			}
+		}
+	case strings.Contains("application/x-www-form-urlencoded", tmp.ContentType):
+		if tmp.Body != nil {
+			str := tmp.Body.(string)
+			var replaceBody = []interface{}{}
+			for _, line := range strings.Split(str, "\n") {
+				if index := strings.Index(line, ": "); index != -1 {
+					key := line[0:index]
+					value := strings.Trim(strings.TrimPrefix(line[index:len(line)-1], ": "), `"`)
+					value = strings.ReplaceAll(value, `\"`, `"`)
+
+					replaceBody = append(replaceBody, map[string]interface{}{
+						"key":   key,
+						"value": value,
+					})
+				}
+			}
+			tmp.Body = replaceBody
+		}
+	default:
+		b.Body = "API DOC support content type json,form-data,urlencoded only"
+	}
+
+	b.Body = tmp.Body
+	b.ContentType = tmp.ContentType
+	return nil
 }

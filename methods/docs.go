@@ -6,11 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"reflect"
 	"strconv"
 	"time"
 
+	"github.com/gofrs/uuid"
 	"github.com/knadh/stuffbin"
 	"github.com/pkg/browser"
+	"github.com/spf13/cast"
 	"github.com/urfave/cli"
 )
 
@@ -35,6 +38,45 @@ func (f *FileTrunk) IsDir() bool { return false }
 // Sys - I have no idea
 func (f *FileTrunk) Sys() interface{} { return nil }
 
+func isArray(data interface{}) bool {
+	switch data.(type) {
+	case []interface{}:
+		return true
+	default:
+		return false
+	}
+}
+
+func getDataType(data interface{}) string {
+	if _, err := cast.ToIntE(data); err == nil {
+		return reflect.Int.String()
+	}
+	if _, err := cast.ToBoolE(data); err == nil {
+		return reflect.Bool.String()
+	}
+	if _, err := cast.ToFloat64E(data); err == nil {
+		return "double"
+	}
+	if vals, err := cast.ToSliceE(data); err == nil {
+		if len(vals) > 0 {
+			itemDataType := getDataType(vals[0])
+			return fmt.Sprintf("%s[%s]", reflect.Array.String(), itemDataType)
+		}
+		return reflect.Array.String()
+	}
+	if _, err := cast.ToStringMapE(data); err == nil {
+		return "object"
+	}
+	if v, err := cast.ToStringE(data); err == nil && v != "" {
+		if uid := uuid.FromStringOrNil(v); uid != uuid.Nil {
+			return "uuid"
+		}
+		return reflect.String.String()
+	}
+
+	return "unknow"
+}
+
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -53,7 +95,9 @@ func GenerateDocs(c *cli.Context) error {
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
-		"html": func(val string) string { return val },
+		"html":        func(val string) string { return val },
+		"isArray":     isArray,
+		"getDataType": getDataType,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

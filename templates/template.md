@@ -14,7 +14,7 @@
 
 ### [{{ .Method }}] {{.Name}}
 
-**Method**: {{.Method}}  
+**Method**: {{.Method}}
 
 **RequestURL**: `{{ .URL | html }}{{ .Path }}`
 
@@ -38,11 +38,13 @@
     <table>
     <tr>
     <th>Key</th>
+    <th>Type</th>
     <th>Value</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
+    <td><code>{{- getDataType .value}}</code></td>
     <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
     </tr>
     {{-  end}}
@@ -74,18 +76,60 @@
 ```json
 {{ .RawParams | html}}
 ```
+{{ end -}}
 
-**ContentType**: `{{ .Body.ContentType}}` 
+**SubContentType**: `{{ .Body.ContentType}}` 
 
 **Body**:
+{{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .Body.Body }}
     {{ .Body.Body | html }}
 {{ else }}
+    
 {{ end }}
 ```
+{{- end }}
 
-{{ end -}}
+{{- if eq .Body.ContentType "multipart/form-data" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .Body.Body }}
+        {{- range .Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
+        <td><code>{{- .value | html}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+{{- end -}}
+
+{{- if eq .Body.ContentType "application/x-www-form-urlencoded" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .Body.Body }}
+        {{- range .Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- getDataType .value}}</code></td>
+        <td><code>{{- .value | html}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+{{- end -}}
+
+
 
 <!-- 
 **Pre Request Script**:
@@ -107,7 +151,7 @@
 
 ### [{{ .Method }}] {{ .Name}}
 
-**Method**: {{ .Method}}  
+**Method**: {{ .Method}}
 
 **RequestURL**:  `{{ .URL | html}}{{ .Path}}`
 
@@ -131,11 +175,13 @@
     <table>
     <tr>
     <th>Key</th>
+    <th>Type</th>
     <th>Value</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
+    <td><code>{{- getDataType .value}}</code></td>
     <td>`{{- if .value }}{{ .value | html }}`{{ else }} {{ end }}</td>
     </tr>
     {{-  end}}
@@ -163,6 +209,7 @@ Password: `{{ .Pass}}`
 **ContentType**: `{{ .Body.ContentType}}`
 
 **Body**:
+{{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .Body.Body }}
     {{ .Body.Body | html }}
@@ -170,6 +217,45 @@ Password: `{{ .Pass}}`
     
 {{ end }}
 ```
+{{- end }}
+
+{{- if eq .Body.ContentType "multipart/form-data" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .Body.Body }}
+        {{- range .Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
+        <td><code>{{- .value | html}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+{{- end -}}
+
+{{- if eq .Body.ContentType "application/x-www-form-urlencoded" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .Body.Body }}
+        {{- range .Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- getDataType .value}}</code></td>
+        <td><code>{{- .value | html}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+{{- end -}}
 
 <!-- 
 **Pre Request Script**: 
