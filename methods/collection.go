@@ -2,6 +2,7 @@ package methods
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 
 	"github.com/spf13/cast"
@@ -15,6 +16,9 @@ type Collection struct {
 	Folders []Folders `json:"folders"`
 	// Requests inside the Collection
 	Requests []Requests `json:"requests"`
+
+	// Set Data into Collection
+	Property FolderProperties `json:"data"`
 }
 
 // Folders can be organized to Folders
@@ -23,6 +27,9 @@ type Folders struct {
 	Name string `json:"name"`
 	// Requests inside the Folder
 	Requests []Requests `json:"requests"`
+
+	// Set Data into Collection
+	Property FolderProperties `json:"data"`
 }
 
 // Headers are the Request Headers
@@ -71,7 +78,37 @@ type Requests struct {
 	Collection int `json:"collection"`
 }
 
+type FolderProperties struct {
+	Auth    AuthType  `json:"auth"`
+	Headers []Headers `json:"headers"`
+}
+
+func (f *FolderProperties) UnmarshalJSON(data []byte) error {
+	var dataJSON string
+	if err := json.Unmarshal(data, &dataJSON); err != nil {
+		return err
+	}
+
+	if json.Valid([]byte(dataJSON)) {
+		var tmp = struct {
+			Auth    AuthType  `json:"auth"`
+			Headers []Headers `json:"headers"`
+		}{}
+		if err := json.Unmarshal([]byte(dataJSON), &tmp); err != nil {
+			fmt.Println(err)
+			return err
+		}
+		f.Auth = tmp.Auth
+		f.Headers = tmp.Headers
+	}
+	return nil
+}
+
 type AuthType struct {
+	Key   string `json:"key"`
+	AddTo string `json:"addTo"`
+	Value string `json:"value"`
+
 	// value enum => none,inherit,bearer
 	AuthType string `json:"authType"`
 
@@ -79,6 +116,10 @@ type AuthType struct {
 
 	// JWT Token on auth type bearer
 	Token string `json:"token"`
+
+	// for basic auth
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 // BodyParams include the Body Parameters

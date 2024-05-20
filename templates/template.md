@@ -1,14 +1,146 @@
 {{ range .  }}
 
-# {{.Name}}
+# Folder: {{.Name}}
 
+<!-- Start Root Folder Property -->
+{{- if ne .Property.Auth.AuthType "" -}}
+**Authentication**: `{{ .Property.Auth.AuthType | html }}`
+    {{- if eq .Property.Auth.AuthType "bearer" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>Authorization</td>
+        <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "api-key" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Key | html}}`</td>
+        <td>`{{- .Property.Auth.Value | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "basic" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Username</th>
+        <th>Password</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Username | html}}`</td>
+        <td>`{{- .Property.Auth.Password | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+{{- end -}}
+
+{{- if .Property.Headers -}}
+**Headers**: 
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Value</th>
+    </tr>
+    {{- range .Property.Headers -}}
+    <tr>
+    <td>{{- .Key | html -}}</td>
+    <td>`{{- .Value | html -}}`</td>
+    </tr>
+    {{- end -}}
+    </table>
+{{- end -}}
+<!-- END Root Folder Property -->
+
+
+<!-- Range Folder And Request -->
 {{-  if .Folders}}
 {{- range .Folders}}
 
 ---
 
 ## Folder: {{.Name}}
+<!-- Start Sub Folder Property -->
+{{- if ne .Property.Auth.AuthType "" -}}
+**Authentication**: `{{ .Property.Auth.AuthType | html }}`
+    {{- if eq .Property.Auth.AuthType "bearer" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>Authorization</td>
+        <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "api-key" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Key | html}}`</td>
+        <td>`{{- .Property.Auth.Value | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "basic" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Username</th>
+        <th>Password</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Username | html}}`</td>
+        <td>`{{- .Property.Auth.Password | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+{{- end -}}
+
+{{- if .Property.Headers -}}
+**Headers**: 
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Value</th>
+    </tr>
+    {{- range .Property.Headers -}}
+    <tr>
+    <td>{{- .Key | html -}}</td>
+    <td>`{{- .Value | html -}}`</td>
+    </tr>
+    {{- end -}}
+    </table>
+{{- end -}}
+<!-- End Sub Folder Property -->
+
+
 {{-  range .Requests }}
+
 
 ---
 
@@ -53,7 +185,7 @@
 
 {{- if ne .Auth.AuthType "None" }}
 
-**Authentication Type**:  {{ .Auth.AuthType}}
+**Authentication Type**:  `{{ .Auth.AuthType}}`
 
 {{- if .Auth.Token}}
 
@@ -85,8 +217,6 @@
 ```json
 {{ if .Body.Body }}
     {{ .Body.Body | html }}
-{{ else }}
-    
 {{ end }}
 ```
 {{- end }}
@@ -188,7 +318,7 @@
     </table>
 {{- end -}}
 {{ if ne .Auth.AuthType "None"}}
-**Authentication Type**: {{.Auth.AuthType}}  
+**Authentication Type**: `{{.Auth.AuthType}}`
 
 {{ if .Auth.Token}}**BearerToken**: `{{ .Auth.Token | html}}`{{ end}}
 
@@ -213,8 +343,6 @@ Password: `{{ .Pass}}`
 ```json
 {{ if .Body.Body }}
     {{ .Body.Body | html }}
-{{ else }}
-    
 {{ end }}
 ```
 {{- end }}
@@ -257,7 +385,7 @@ Password: `{{ .Pass}}`
     </table>
 {{- end -}}
 
-**Example Response**:
+<!-- **Example Response**:
 {{- if .RequestVariable }}
     {{- range .RequestVariable }}
         {{- if .Examples }}
@@ -268,7 +396,7 @@ Password: `{{ .Pass}}`
             {{- end }}
         {{- end }}
     {{- end}}
-{{- end }}
+{{- end }} -->
 
 <!-- 
 **Pre Request Script**: 
