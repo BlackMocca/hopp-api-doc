@@ -22,25 +22,11 @@ func main() {
 
 	var out string
 
-	getFlags := []cli.Flag{
-		cli.StringFlag{
-			Name:  "token, t",
-			Usage: "Send the Request with Bearer Token",
-		},
-		cli.StringFlag{
-			Name:  "u",
-			Usage: "Add the Username",
-		},
-		cli.StringFlag{
-			Name:  "p",
-			Usage: "Add the Password",
-		},
-		cli.StringSliceFlag{
-			Name:  "header, H",
-			Usage: "Header to pass with the request. Can be used multiple times.",
-		},
-	}
 	genFlags := []cli.Flag{
+		cli.StringFlag{
+			Name:  "output, o",
+			Usage: "Writing Directory to generate markdown and html",
+		},
 		cli.IntFlag{
 			Name:  "port, p",
 			Usage: "Port at which the server will open to",
@@ -51,102 +37,7 @@ func main() {
 			Usage: "Whether to open the browser automatically",
 		},
 	}
-	postFlags := []cli.Flag{
-		cli.StringFlag{
-			Name:  "token, t",
-			Usage: "Send the Request with Bearer Token",
-		},
-		cli.StringFlag{
-			Name:  "u",
-			Usage: "Add the Username",
-		},
-		cli.StringFlag{
-			Name:  "p",
-			Usage: "Add the Password",
-		},
-		cli.StringFlag{
-			Name:  "ctype, c", // Content Type Flag
-			Usage: "Change the Content Type",
-		},
-		cli.StringFlag{
-			Name:  "body, b",
-			Usage: "Body of the Post Request",
-		},
-		cli.BoolFlag{
-			Name:  "editor, e",
-			Usage: "Open editor to insert request body",
-		},
-		cli.StringSliceFlag{
-			Name:  "header, H",
-			Usage: "Header to pass with the request. Can be used multiple times.",
-		},
-	}
 	app.Commands = []cli.Command{
-		{
-			Name:  "get",
-			Usage: "Send a GET request",
-			Flags: getFlags,
-			Action: func(c *cli.Context) error {
-				var err error
-				out, err = mets.Getbasic(c)
-				return err
-			},
-		},
-		{
-			Name:  "post",
-			Usage: "Send a POST Request",
-			Flags: postFlags,
-			Action: func(c *cli.Context) error {
-				var err error
-				out, err = mets.BasicRequestWithBody(c, "POST")
-				return err
-			},
-		},
-		{
-			Name:  "put",
-			Usage: "Send a PUT Request",
-			Flags: postFlags,
-			Action: func(c *cli.Context) error {
-				var err error
-				out, err = mets.BasicRequestWithBody(c, "PUT")
-				return err
-			},
-		},
-		{
-			Name:  "patch",
-			Usage: "Send a PATCH Request",
-			Flags: postFlags,
-			Action: func(c *cli.Context) error {
-				var err error
-				out, err = mets.BasicRequestWithBody(c, "PATCH")
-				return err
-			},
-		},
-		{
-			Name:  "delete",
-			Usage: "Send a DELETE Request",
-			Flags: postFlags,
-			Action: func(c *cli.Context) error {
-				var err error
-				out, err = mets.BasicRequestWithBody(c, "DELETE")
-				return err
-			},
-		},
-		{
-			Name:  "send",
-			Usage: "Test all the Endpoints in the Hoppscotch Collection.json",
-			Action: func(c *cli.Context) error {
-				coll, err := mets.ReadCollection(c.Args().Get(0))
-				if err != nil {
-					return err
-				}
-				_, err = mets.ProcessCollection(coll)
-				if err != nil {
-					return err
-				}
-				return nil
-			},
-		},
 		{
 			Name:  "gen",
 			Usage: "Generate Documentation from the Hoppscotch Collection.json",
@@ -163,7 +54,7 @@ func main() {
 
 	WE REALLY NEED YOUR FEEDBACK,
 
-	CREATE A NEW ISSUE FOR BUGS AND FEATURE REQUESTS : < https://github.com/hoppscotch/hopp-cli >
+	CREATE A NEW ISSUE FOR BUGS AND FEATURE REQUESTS : < https://github.com/BlackMocca/hopp-cli >
 
 	`, cli.AppHelpTemplate)
 

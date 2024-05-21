@@ -15,7 +15,7 @@ func initFileSystem(binPath string) (stuffbin.FileSystem, error) {
 		// the in-memory stuffbin.FileSystem.
 
 		files := []string{
-			"./templates/index.html",
+			"./templates/index.html:/index.html",
 			"./templates/template.md:/template.md",
 			"./templates/_sidebar.md:/_sidebar.md",
 		}

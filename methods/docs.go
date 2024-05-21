@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
@@ -144,6 +145,29 @@ func getSlug(data interface{}) string {
 	return slug.Make(data.(string))
 }
 
+func writeFile(path string, fs stuffbin.FileSystem) error {
+	dir := filepath.Base(path)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return err
+	}
+
+	for _, filename := range fs.List() {
+		fc, err := fs.Get(filename)
+		if err != nil {
+			return err
+		}
+		defer fc.Close()
+
+		writePath := filepath.Join(dir, filename)
+
+		if err := os.WriteFile(writePath, fc.ReadBytes(), 0664); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -208,24 +232,36 @@ func GenerateDocs(c *cli.Context) error {
 		return err
 	}
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		out, err := fs.Read("templates/index.html")
-		if err != nil {
-			log.Println(err)
+	switch c.String("output") != "" {
+	case true:
+		output := filepath.Clean(c.String("output"))
+
+		fmt.Println("output", output)
+		/* writing file */
+		if err := writeFile(output, fs); err != nil {
+			return err
 		}
-		w.Write(out)
-	})
-	PortStr := ":" + strconv.Itoa(c.Int("port"))
-	URL := fmt.Sprintf("http://localhost%s", PortStr)
+		fmt.Println("Writing File Successful!!")
+	default:
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			out, err := fs.Read("index.html")
+			if err != nil {
+				log.Println(err)
+			}
+			w.Write(out)
+		})
+		PortStr := ":" + strconv.Itoa(c.Int("port"))
+		URL := fmt.Sprintf("http://localhost%s", PortStr)
 
-	http.Handle("/static/", http.StripPrefix("/static/", fs.FileServer()))
+		http.Handle("/docs/", http.StripPrefix("/docs/", fs.FileServer()))
 
-	log.Printf("\033[1;36mServer Listening at %s\033[0m", URL)
+		log.Printf("\033[1;36mServer Listening at %s\033[0m", URL)
 
-	if !c.Bool("browser") { //Check if User wants to open the Broswer
-		browser.OpenURL(URL) // AutoOpen the Broswer
+		if !c.Bool("browser") { //Check if User wants to open the Broswer
+			browser.OpenURL(URL) // AutoOpen the Broswer
+		}
+
+		http.ListenAndServe(PortStr, nil)
 	}
-
-	http.ListenAndServe(PortStr, nil)
 	return nil
 }

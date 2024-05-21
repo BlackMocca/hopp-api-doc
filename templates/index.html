@@ -11,11 +11,17 @@
 <body>
   <div id="app"></div>
   <script>
+    function getBasePath() {
+      if (window.location.pathname !== "/") {
+        return window.location.pathname
+      }
+      return "/docs/"
+    }
     window.$docsify = {
       name:"API Docs",
       repo: '',
-      basePath: '/static/',
-      relativePath: false,
+      basePath: getBasePath(),
+      relativePath: true,
       executeScript: true,
       auto2top: true,
       copyCode: {
