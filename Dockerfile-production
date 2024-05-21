@@ -1,0 +1,32 @@
+FROM golang:1.20
+
+ENV GO111MODULE=on
+ENV ADDR=0.0.0.0
+ENV TZ=Asia/Bangkok
+
+RUN mkdir -p /go/src/github.com/Blackmocca/hopp-api-doc
+WORKDIR /go/src/github.com/Blackmocca/hopp-api-doc
+
+# Move to project folder
+WORKDIR /go/src/github.com/Blackmocca/hopp-api-doc
+
+COPY . . 
+RUN go mod tidy     
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o   /go/src/github.com/Blackmocca/hopp-api-doc/tmp/app main.go
+
+FROM alpine:latest 
+RUN apk --no-cache add ca-certificates
+WORKDIR /usr/app
+
+ENV ADDR=0.0.0.0
+ENV TZ=Asia/Bangkok
+
+COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/tmp/app .
+COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/docs docs
+COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/assets assets
+
+EXPOSE 3000
+
+CMD ["./app"]  
+

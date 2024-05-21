@@ -1,12 +1,13 @@
 package methods
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/knadh/stuffbin"
 )
 
-func initFileSystem(binPath string) (stuffbin.FileSystem, error) {
+func initFileSystem(binPath string, templateDir string) (stuffbin.FileSystem, error) {
 	fs, err := stuffbin.UnStuff(binPath)
 	// If files are not stuffed with the binary,
 	// try to pick up files from local file system.
@@ -15,9 +16,9 @@ func initFileSystem(binPath string) (stuffbin.FileSystem, error) {
 		// the in-memory stuffbin.FileSystem.
 
 		files := []string{
-			"./templates/index.html:/index.html",
-			"./templates/template.md:/template.md",
-			"./templates/_sidebar.md:/_sidebar.md",
+			fmt.Sprintf("%s/index.html:/index.html", templateDir),
+			fmt.Sprintf("%s/template.md:/template.md", templateDir),
+			fmt.Sprintf("%s/_sidebar.md:/_sidebar.md", templateDir),
 		}
 
 		// mutates err object.

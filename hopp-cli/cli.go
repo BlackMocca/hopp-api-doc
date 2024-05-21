@@ -43,7 +43,11 @@ func main() {
 			Usage: "Generate Documentation from the Hoppscotch Collection.json",
 			Flags: genFlags,
 			Action: func(c *cli.Context) error {
-				if err := mets.GenerateDocs(c); err != nil {
+				output := c.String("output")
+				exportPathfile := c.Args()[0]
+				servePort := c.Int("port")
+				isOpenBrowser := c.Bool("browser")
+				if err := mets.GenerateDocs(output, exportPathfile, servePort, isOpenBrowser, "/templates"); err != nil {
 					return err
 				}
 				return nil

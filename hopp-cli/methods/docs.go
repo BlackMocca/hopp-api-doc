@@ -17,7 +17,6 @@ import (
 	"github.com/knadh/stuffbin"
 	"github.com/pkg/browser"
 	"github.com/spf13/cast"
-	"github.com/urfave/cli"
 )
 
 // FileTrunk handles the buffer for generated README.md File
@@ -146,8 +145,7 @@ func getSlug(data interface{}) string {
 }
 
 func writeFile(path string, fs stuffbin.FileSystem) error {
-	dir := filepath.Base(path)
-	if err := os.MkdirAll(dir, 0755); err != nil {
+	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
 	}
 
@@ -158,8 +156,7 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 		}
 		defer fc.Close()
 
-		writePath := filepath.Join(dir, filename)
-
+		writePath := filepath.Join(path, filename)
 		if err := os.WriteFile(writePath, fc.ReadBytes(), 0664); err != nil {
 			return err
 		}
@@ -169,17 +166,17 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 }
 
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
-func GenerateDocs(c *cli.Context) error {
+func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBrowser bool, templatedir string) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
 	if err != nil {
 		return err
 	}
-	fs, err := initFileSystem(execPath) //Init Virtual FS
+	fs, err := initFileSystem(execPath, templatedir) //Init Virtual FS
 	if err != nil {
 		return err
 	}
 
-	colls, err := ReadCollection(c.Args().Get(0))
+	colls, err := ReadCollection(exportPathfile)
 	if err != nil {
 		return err
 	}
@@ -232,11 +229,10 @@ func GenerateDocs(c *cli.Context) error {
 		return err
 	}
 
-	switch c.String("output") != "" {
+	switch output != "" {
 	case true:
-		output := filepath.Clean(c.String("output"))
+		output := filepath.Clean(output)
 
-		fmt.Println("output", output)
 		/* writing file */
 		if err := writeFile(output, fs); err != nil {
 			return err
@@ -250,14 +246,14 @@ func GenerateDocs(c *cli.Context) error {
 			}
 			w.Write(out)
 		})
-		PortStr := ":" + strconv.Itoa(c.Int("port"))
+		PortStr := ":" + strconv.Itoa(servePort)
 		URL := fmt.Sprintf("http://localhost%s", PortStr)
 
 		http.Handle("/docs/", http.StripPrefix("/docs/", fs.FileServer()))
 
 		log.Printf("\033[1;36mServer Listening at %s\033[0m", URL)
 
-		if !c.Bool("browser") { //Check if User wants to open the Broswer
+		if isOpenBrowser { //Check if User wants to open the Broswer
 			browser.OpenURL(URL) // AutoOpen the Broswer
 		}
 

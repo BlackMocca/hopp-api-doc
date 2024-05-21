@@ -1,0 +1,18 @@
+version: "3"
+
+services: 
+
+  hopp-api-doc:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile-development
+    container_name: hopp-api-doc
+    env_file: .env
+    ports:
+      - 3200:3000
+    volumes:
+      - .:/go/src/github.com/Blackmocca/hopp-api-doc
+      - ./domain:/go/src/github.com/Blackmocca/hopp-api-doc/domain
+      - ./assets:/go/src/github.com/Blackmocca/hopp-api-doc/assets
+  
+
