@@ -36,6 +36,12 @@
       },
       subMaxLevel: 4,
       sidebarDisplayLevel: 1, // set sidebar display level
+      search: {
+        maxAge: 600, // Cache search results for 1 day
+        noData: 'No Results!',
+        depth: 2,
+        namespace: "api-doc",
+      }
     }
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
