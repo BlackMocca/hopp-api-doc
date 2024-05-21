@@ -47,6 +47,18 @@ func isArray(data interface{}) bool {
 	}
 }
 
+func getRequestExamples(data interface{}) []ExampleResponse {
+	var examples = make([]ExampleResponse, 0)
+	if v, ok := data.([]RequestVariable); ok && len(v) > 0 {
+		for _, item := range v {
+			if len(item.Examples) > 0 {
+				examples = append(examples, item.Examples...)
+			}
+		}
+	}
+	return examples
+}
+
 func getDataType(data interface{}) string {
 	if _, err := cast.ToIntE(data); err == nil {
 		return reflect.Int.String()
@@ -77,6 +89,13 @@ func getDataType(data interface{}) string {
 	return "unknow"
 }
 
+func tabStart() string {
+	return "<!-- tabs:start -->"
+}
+func tabEnd() string {
+	return "<!-- tabs:end -->"
+}
+
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -95,9 +114,12 @@ func GenerateDocs(c *cli.Context) error {
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
-		"html":        func(val string) string { return val },
-		"isArray":     isArray,
-		"getDataType": getDataType,
+		"html":               func(val string) string { return val },
+		"isArray":            isArray,
+		"getDataType":        getDataType,
+		"tabStart":           tabStart,
+		"tabEnd":             tabEnd,
+		"getRequestExamples": getRequestExamples,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

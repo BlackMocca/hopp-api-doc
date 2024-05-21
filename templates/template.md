@@ -210,7 +210,7 @@
 ```
 {{ end -}}
 
-**SubContentType**: `{{ .Body.ContentType}}` 
+**ContentType**: `{{ .Body.ContentType}}` 
 
 **Request Body**:
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
@@ -259,6 +259,25 @@
     </table>
 {{- end -}}
 
+<!-- Start Folder/Request Request Variable -->
+{{- if getRequestExamples .RequestVariable -}}
+{{ tabStart | html }}
+**Example Response**
+
+{{- range getRequestExamples .RequestVariable -}}
+#### **{{ .Status }} {{.Name | html}}**
+**Response Header** 
+
+
+**Response Body**
+```json
+{{ .Response | html }}
+```
+
+{{- end -}}
+{{ tabEnd | html }}
+{{- end -}}
+<!-- End Folder/Request Request Variable -->
 
 
 <!-- 
@@ -385,18 +404,25 @@ Password: `{{ .Pass}}`
     </table>
 {{- end -}}
 
-<!-- **Example Response**:
-{{- if .RequestVariable }}
-    {{- range .RequestVariable }}
-        {{- if .Examples }}
-            {{- range .Examples }}
-                {{.Status}}
-                {{.Name}}
-                {{.Response}}
-            {{- end }}
-        {{- end }}
-    {{- end}}
-{{- end }} -->
+<!-- Start Folder/Request Request Variable -->
+{{- if getRequestExamples .RequestVariable -}}
+{{ tabStart | html }}
+**Example Response**
+
+{{- range getRequestExamples .RequestVariable -}}
+#### **{{ .Status }} {{.Name | html}}**
+**Response Header** 
+
+
+**Response Body**
+```json
+{{ .Response | html }}
+```
+
+{{- end -}}
+{{ tabEnd | html }}
+{{- end -}}
+<!-- End Folder/Request Request Variable -->
 
 <!-- 
 **Pre Request Script**: 
