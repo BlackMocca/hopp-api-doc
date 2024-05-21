@@ -25,10 +25,28 @@ func ReadCollection(filename string) ([]Collection, error) {
 		return nil, err
 	}
 
+	return ParseCollection(data)
+}
+
+func ParseCollection(data []byte) ([]Collection, error) {
 	var jsonArr []Collection
-	err = json.Unmarshal([]byte(data), &jsonArr) // Unmarshal JSON to Collection Type
-	if err != nil {
-		return nil, fmt.Errorf("error parsing JSON: %w", err)
+	var jsonStruct = Collection{}
+	var parseErr = make([]error, 0)
+	// case Array Unmarshal JSON to Collection Type
+	if err := json.Unmarshal([]byte(data), &jsonArr); err != nil {
+		parseErr = append(parseErr, fmt.Errorf("error parsing JSON: %w", err))
+	}
+
+	// case one collection Unmarshal JSON to Collection Type
+	if err := json.Unmarshal([]byte(data), &jsonStruct); err != nil {
+		parseErr = append(parseErr, fmt.Errorf("error parsing JSON: %w", err))
+	}
+
+	if len(parseErr) >= 2 {
+		return nil, parseErr[0]
+	}
+	if jsonStruct.Name != "" {
+		jsonArr = append(jsonArr, jsonStruct)
 	}
 	return jsonArr, nil
 }
