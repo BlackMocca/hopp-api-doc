@@ -58,7 +58,7 @@
     </tr>
     {{- range .Property.Headers -}}
     <tr>
-    <td>{{- .Key | html -}}</td>
+    <td>`{{- .Key | html -}}`</td>
     <td>`{{- .Value | html -}}`</td>
     </tr>
     {{- end -}}
@@ -119,6 +119,7 @@
         </tr>
         </table>
     {{- end -}}
+<p></p>
 {{- end -}}
 
 {{- if .Property.Headers -}}
@@ -130,7 +131,7 @@
     </tr>
     {{- range .Property.Headers -}}
     <tr>
-    <td>{{- .Key | html -}}</td>
+    <td>`{{- .Key | html -}}`</td>
     <td>`{{- .Value | html -}}`</td>
     </tr>
     {{- end -}}
@@ -186,7 +187,7 @@
 {{- if ne .Auth.AuthType "None" }}
 
 **Authentication Type**: `{{ .Auth.AuthType | html}}` 
-
+ 
 
 {{- if .Auth.Token}}
 
@@ -355,7 +356,8 @@
     </table>
 {{- end -}}
 {{ if ne .Auth.AuthType "None"}}
-**Authentication Type**: `{{.Auth.AuthType | html}}`
+**Authentication Type**: `{{.Auth.AuthType | html}}` 
+ 
 
 {{ if .Auth.Token}}**BearerToken**: `{{ .Auth.Token | html}}`{{ end}}
 
