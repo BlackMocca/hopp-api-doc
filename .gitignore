@@ -41,3 +41,4 @@ dist/
 docs.md
 .DS_Store
 cli
+api/docs/*
