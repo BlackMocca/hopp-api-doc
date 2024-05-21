@@ -256,14 +256,11 @@
     </table>
 {{- end -}}
 
-{{- if ne .Auth.AuthType "None" }}
-
-**Authentication Type**: `{{ .Auth.AuthType | html}}`
-
-{{- if .Auth.Token}}
-
-**BearerToken**:  `{{  .Auth.Token | html -}} `
-
+{{ if ne .Auth.AuthType "None"}}
+**Authentication Type**: `{{.Auth.AuthType | html}}` 
+    
+{{ if .Auth.Token}}
+**BearerToken**: `{{ .Auth.Token | html}}`
 
 {{ end}}
 
@@ -436,15 +433,13 @@
     </table>
 {{- end -}}
 
-{{- if ne .Auth.AuthType "None" }}
+{{ if ne .Auth.AuthType "None"}}
+**Authentication Type**: `{{.Auth.AuthType | html}}` 
+    
+{{ if .Auth.Token}}
+**BearerToken**: `{{ .Auth.Token | html}}`
 
-**Authentication Type**: `{{ .Auth.AuthType | html}}` 
- 
-{{- if .Auth.Token }}
-
-**BearerToken**:  `{{  .Auth.Token | html -}}`
-
-{{- end}}
+{{ end}}
 
 {{- if and .User .Pass}}
 
@@ -611,9 +606,11 @@
 {{- end -}}
 {{ if ne .Auth.AuthType "None"}}
 **Authentication Type**: `{{.Auth.AuthType | html}}` 
- 
+    
+{{ if .Auth.Token}}
+**BearerToken**: `{{ .Auth.Token | html}}`
 
-{{ if .Auth.Token}}**BearerToken**: `{{ .Auth.Token | html}}`{{ end}}
+{{ end}}
 
 {{ if and .User .Pass}}
 Username: `{{ .User}}`  
