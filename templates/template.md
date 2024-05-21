@@ -185,11 +185,13 @@
 
 {{- if ne .Auth.AuthType "None" }}
 
-**Authentication Type**:  `{{ .Auth.AuthType}}`
+**Authentication Type**: `{{ .Auth.AuthType | html}}` 
+
 
 {{- if .Auth.Token}}
 
 **BearerToken**:  `{{  .Auth.Token | html -}} `
+
 
 {{ end}}
 
@@ -211,6 +213,22 @@
 {{ end -}}
 
 **ContentType**: `{{ .Body.ContentType}}` 
+
+{{- if getRequestVariables .RequestVariable }}
+<p><strong>Request Variable:</strong></p>
+<table>
+    <tr>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- range getRequestVariables .RequestVariable }}
+    <tr>
+    <td><code>{{ .Key | html}}</code></td>
+    <td><code>{{ .Value | html }}</code></td>
+    </tr>
+    {{- end }}
+</table>
+{{- end }}
 
 **Request Body**:
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
@@ -302,7 +320,7 @@
 
 **Method**: {{ .Method}}
 
-**RequestURL**:  `{{ .URL | html}}{{ .Path}}`
+**RequestURL**:  `{{ .URL | html }}{{ .Path}}`
 
 {{ if .Headers}}
 **Headers**: 
@@ -337,7 +355,7 @@
     </table>
 {{- end -}}
 {{ if ne .Auth.AuthType "None"}}
-**Authentication Type**: `{{.Auth.AuthType}}`
+**Authentication Type**: `{{.Auth.AuthType | html}}`
 
 {{ if .Auth.Token}}**BearerToken**: `{{ .Auth.Token | html}}`{{ end}}
 
@@ -356,6 +374,7 @@ Password: `{{ .Pass}}`
 {{ end}}
 
 **ContentType**: `{{ .Body.ContentType}}`
+
 
 **Request Body**:
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
