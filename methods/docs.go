@@ -144,11 +144,6 @@ func getSlug(data interface{}) string {
 	return slug.Make(data.(string))
 }
 
-func print(data interface{}) interface{} {
-	fmt.Println(data)
-	return data
-}
-
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -176,7 +171,6 @@ func GenerateDocs(c *cli.Context) error {
 		"getRequestExamples":  getRequestExamples,
 		"getRequestVariables": getRequestVariables,
 		"getSlug":             getSlug,
-		"print":               print,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

@@ -3,7 +3,7 @@
 # Folder: {{.Name}}
 
 <!-- Start Request Root -->
-{{- range print .Requests}}
+{{- range .Requests}}
 
 ---
 ## [{{ .Method }}] {{ .Name}}
