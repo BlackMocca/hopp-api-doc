@@ -1,4 +1,4 @@
-module github.com/hoppscotch/hopp-cli
+module github.com/BlackMocca/hopp-api-doc/hopp-cli
 
 go 1.16
 

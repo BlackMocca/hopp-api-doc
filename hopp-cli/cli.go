@@ -5,8 +5,8 @@ import (
 	"log"
 	"os"
 
+	mets "github.com/BlackMocca/hopp-api-doc/hopp-cli/methods"
 	"github.com/fatih/color"
-	mets "github.com/hoppscotch/hopp-cli/methods"
 	"github.com/urfave/cli"
 )
 
