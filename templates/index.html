@@ -6,12 +6,7 @@
   <meta charset="UTF-8">
   <title>API Dococumentation</title>
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/themes/vue.css" />
-  <!-- <style>
-    :root {
-      --docsifytabs-border-color: #ededed;
-      --docsifytabs-tab-highlight-color: purple;
-    }
-  </style> -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/sidebar.min.css" />
 </head>
 <body>
   <div id="app"></div>
@@ -35,6 +30,12 @@
         tabComments: true, // default
         tabHeadings: true // default
       },
+      loadSidebar: true,
+      alias: {
+        '/static/.*/_sidebar.md': '/sidebar.md',
+      },
+      subMaxLevel: 4,
+      sidebarDisplayLevel: 1, // set sidebar display level
     }
   </script>
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
@@ -43,5 +44,6 @@
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script> 
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.js"></script>
   <script src="https://unpkg.com/docsify-copy-code@3"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
 </body>
 </html>

@@ -8,9 +8,11 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gofrs/uuid"
+	"github.com/gosimple/slug"
 	"github.com/knadh/stuffbin"
 	"github.com/pkg/browser"
 	"github.com/spf13/cast"
@@ -130,6 +132,23 @@ func prepareData(colls []Collection) {
 	}
 }
 
+func getSlug(data interface{}) string {
+	if v, ok := data.(Collection); ok && v.Name != "" {
+		return slug.Make(fmt.Sprintf("Folder: %s", v.Name))
+	}
+	if v, ok := data.(Requests); ok && v.Method != "" && v.Name != "" {
+		path := strings.ReplaceAll(v.Name, "/", "")
+		path = strings.ReplaceAll(path, ":", "")
+		return slug.Make(fmt.Sprintf("[%s] %s", v.Method, slug.Make(path)))
+	}
+	return slug.Make(data.(string))
+}
+
+func print(data interface{}) interface{} {
+	fmt.Println(data)
+	return data
+}
+
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -156,6 +175,8 @@ func GenerateDocs(c *cli.Context) error {
 		"tabEnd":              tabEnd,
 		"getRequestExamples":  getRequestExamples,
 		"getRequestVariables": getRequestVariables,
+		"getSlug":             getSlug,
+		"print":               print,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")
@@ -170,9 +191,29 @@ func GenerateDocs(c *cli.Context) error {
 		return err
 	}
 
+	sidebarTmpl, err := stuffbin.ParseTemplates(fmap, fs, "/_sidebar.md")
+	if err != nil {
+		panic(err)
+	}
+	// f will be used to store rendered templates in memory.
+	var sidebarF FileTrunk
+
+	// Execute the template to the file.
+	if err = sidebarTmpl.Execute(&sidebarF, colls); err != nil {
+		return err
+	}
+
 	if err := fs.Add(stuffbin.NewFile("/README.md", &f, f.Bytes())); err != nil {
 		return err
 	}
+
+	if err := fs.Delete("/_sidebar.md"); err != nil {
+		return err
+	}
+	if err := fs.Add(stuffbin.NewFile("/_sidebar.md", &sidebarF, sidebarF.Bytes())); err != nil {
+		return err
+	}
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		out, err := fs.Read("templates/index.html")
 		if err != nil {

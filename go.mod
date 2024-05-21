@@ -6,6 +6,7 @@ require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
 	github.com/fatih/color v1.13.0
 	github.com/gofrs/uuid v4.4.0+incompatible // indirect
+	github.com/gosimple/slug v1.14.0 // indirect
 	github.com/knadh/stuffbin v1.1.0
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect

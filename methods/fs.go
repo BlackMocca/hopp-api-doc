@@ -17,6 +17,7 @@ func initFileSystem(binPath string) (stuffbin.FileSystem, error) {
 		files := []string{
 			"./templates/index.html",
 			"./templates/template.md:/template.md",
+			"./templates/_sidebar.md:/_sidebar.md",
 		}
 
 		// mutates err object.
