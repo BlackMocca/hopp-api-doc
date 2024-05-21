@@ -80,7 +80,7 @@ type Requests struct {
 	Collection int `json:"collection"`
 }
 
-func (r *Requests) ReplaceVariableKey() {
+func (r *Requests) PrepareText() {
 	if len(r.RequestVariable) == 0 {
 		return
 	}
@@ -94,6 +94,9 @@ func (r *Requests) ReplaceVariableKey() {
 				}
 			}
 		}
+	}
+	if r.Auth.AuthType == "inherit" {
+		r.Auth.Token = ""
 	}
 }
 
@@ -119,6 +122,9 @@ func (f *FolderProperties) UnmarshalJSON(data []byte) error {
 		}
 		f.Auth = tmp.Auth
 		f.Headers = tmp.Headers
+	}
+	if f.Auth.AddTo == "" {
+		f.Auth.AddTo = "HEADERS"
 	}
 	return nil
 }

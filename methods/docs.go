@@ -114,7 +114,7 @@ func prepareData(colls []Collection) {
 		for folderIndex := range folders {
 			if reqs := folders[folderIndex].Requests; len(reqs) > 0 {
 				for reqIndex := range reqs {
-					folders[folderIndex].Requests[reqIndex].ReplaceVariableKey()
+					folders[folderIndex].Requests[reqIndex].PrepareText()
 				}
 			}
 		}
@@ -122,7 +122,7 @@ func prepareData(colls []Collection) {
 	for colIndex := range colls {
 		if len(colls[colIndex].Requests) > 0 {
 			for reqIndex := range colls[colIndex].Requests {
-				colls[colIndex].Requests[reqIndex].ReplaceVariableKey()
+				colls[colIndex].Requests[reqIndex].PrepareText()
 			}
 		}
 		prepareRequests(colls[colIndex].Folders)
