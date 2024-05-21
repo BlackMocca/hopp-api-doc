@@ -2,6 +2,72 @@
 
 # Folder: {{.Name}}
 
+
+<!-- Start Root Folder Property -->
+{{- if ne .Property.Auth.AuthType "" -}}
+**Authentication**: `{{ .Property.Auth.AuthType | html }}`
+    {{- if eq .Property.Auth.AuthType "bearer" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>Authorization</td>
+        <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "api-key" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Key</th>
+        <th>Value</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Key | html}}`</td>
+        <td>`{{- .Property.Auth.Value | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+    {{- if eq .Property.Auth.AuthType "basic" -}}
+        <table>
+        <tr>
+        <th>AddTo</th>
+        <th>Username</th>
+        <th>Password</th>
+        </tr>
+        <tr>
+        <td>{{ .Property.Auth.AddTo | html }}</td>
+        <td>`{{ .Property.Auth.Username | html}}`</td>
+        <td>`{{- .Property.Auth.Password | html}}`</td>
+        </tr>
+        </table>
+    {{- end -}}
+{{- end -}}
+
+{{- if .Property.Headers -}}
+**Headers**: 
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Value</th>
+    </tr>
+    {{- range .Property.Headers -}}
+    <tr>
+    <td>`{{- .Key | html -}}`</td>
+    <td>`{{- .Value | html -}}`</td>
+    </tr>
+    {{- end -}}
+    </table>
+{{- end -}}
+<!-- END Root Folder Property -->
+
+
 <!-- Start Request Root -->
 {{- range .Requests}}
 
@@ -153,71 +219,7 @@ Password: `{{ .Pass}}`
 {{ end }}
 
 ---
-<!-- Start Request Root -->
-
-<!-- Start Root Folder Property -->
-{{- if ne .Property.Auth.AuthType "" -}}
-**Authentication**: `{{ .Property.Auth.AuthType | html }}`
-    {{- if eq .Property.Auth.AuthType "bearer" -}}
-        <table>
-        <tr>
-        <th>AddTo</th>
-        <th>Key</th>
-        <th>Value</th>
-        </tr>
-        <tr>
-        <td>{{ .Property.Auth.AddTo | html }}</td>
-        <td>Authorization</td>
-        <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
-        </tr>
-        </table>
-    {{- end -}}
-    {{- if eq .Property.Auth.AuthType "api-key" -}}
-        <table>
-        <tr>
-        <th>AddTo</th>
-        <th>Key</th>
-        <th>Value</th>
-        </tr>
-        <tr>
-        <td>{{ .Property.Auth.AddTo | html }}</td>
-        <td>`{{ .Property.Auth.Key | html}}`</td>
-        <td>`{{- .Property.Auth.Value | html}}`</td>
-        </tr>
-        </table>
-    {{- end -}}
-    {{- if eq .Property.Auth.AuthType "basic" -}}
-        <table>
-        <tr>
-        <th>AddTo</th>
-        <th>Username</th>
-        <th>Password</th>
-        </tr>
-        <tr>
-        <td>{{ .Property.Auth.AddTo | html }}</td>
-        <td>`{{ .Property.Auth.Username | html}}`</td>
-        <td>`{{- .Property.Auth.Password | html}}`</td>
-        </tr>
-        </table>
-    {{- end -}}
-{{- end -}}
-
-{{- if .Property.Headers -}}
-**Headers**: 
-    <table>
-    <tr>
-    <th>Key</th>
-    <th>Value</th>
-    </tr>
-    {{- range .Property.Headers -}}
-    <tr>
-    <td>`{{- .Key | html -}}`</td>
-    <td>`{{- .Value | html -}}`</td>
-    </tr>
-    {{- end -}}
-    </table>
-{{- end -}}
-<!-- END Root Folder Property -->
+<!-- End Request Root -->
 
 
 <!-- Range Folder And Request -->
