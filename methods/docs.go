@@ -59,6 +59,13 @@ func getRequestExamples(data interface{}) []ExampleResponse {
 	return examples
 }
 
+func getRequestVariables(data interface{}) []RequestVariable {
+	if v, ok := data.([]RequestVariable); ok && len(v) > 0 {
+		return RequestVariables(v).GetRequestVariables()
+	}
+	return make([]RequestVariable, 0)
+}
+
 func getDataType(data interface{}) string {
 	if _, err := cast.ToIntE(data); err == nil {
 		return reflect.Int.String()
@@ -96,6 +103,33 @@ func tabEnd() string {
 	return "<!-- tabs:end -->"
 }
 
+func prepareData(colls []Collection) {
+	if len(colls) == 0 {
+		return
+	}
+	var prepareRequests = func(folders []Collection) {
+		if len(folders) == 0 {
+			return
+		}
+		for folderIndex := range folders {
+			if reqs := folders[folderIndex].Requests; len(reqs) > 0 {
+				for reqIndex := range reqs {
+					folders[folderIndex].Requests[reqIndex].ReplaceVariableKey()
+				}
+			}
+		}
+	}
+	for colIndex := range colls {
+		if len(colls[colIndex].Requests) > 0 {
+			for reqIndex := range colls[colIndex].Requests {
+				colls[colIndex].Requests[reqIndex].ReplaceVariableKey()
+			}
+		}
+		prepareRequests(colls[colIndex].Folders)
+		prepareData(colls[colIndex].Folders)
+	}
+}
+
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
 func GenerateDocs(c *cli.Context) error {
 	execPath, err := os.Executable() //get Executable Path for StuffBin
@@ -111,15 +145,17 @@ func GenerateDocs(c *cli.Context) error {
 	if err != nil {
 		return err
 	}
+	prepareData(colls)
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
-		"html":               func(val string) string { return val },
-		"isArray":            isArray,
-		"getDataType":        getDataType,
-		"tabStart":           tabStart,
-		"tabEnd":             tabEnd,
-		"getRequestExamples": getRequestExamples,
+		"html":                func(val string) string { return val },
+		"isArray":             isArray,
+		"getDataType":         getDataType,
+		"tabStart":            tabStart,
+		"tabEnd":              tabEnd,
+		"getRequestExamples":  getRequestExamples,
+		"getRequestVariables": getRequestVariables,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

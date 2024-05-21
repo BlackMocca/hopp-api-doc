@@ -3,6 +3,7 @@ package methods
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/spf13/cast"
@@ -13,7 +14,8 @@ type Collection struct {
 	// Name of the Whole Collection
 	Name string `json:"name"`
 	// Folders JSON Type
-	Folders []Folders `json:"folders"`
+	// Folders []Folders `json:"folders"`
+	Folders []Collection `json:"folders"`
 	// Requests inside the Collection
 	Requests []Requests `json:"requests"`
 
@@ -76,6 +78,23 @@ type Requests struct {
 	Name string `json:"name"`
 	// Number of Collection
 	Collection int `json:"collection"`
+}
+
+func (r *Requests) ReplaceVariableKey() {
+	if len(r.RequestVariable) == 0 {
+		return
+	}
+
+	if reqs := RequestVariables(r.RequestVariable).GetRequestVariables(); len(reqs) > 0 {
+		for _, req := range reqs {
+			if req.Value != "" {
+				var regex, err = regexp.Compile(req.Value)
+				if err == nil && regex.MatchString(r.URL) {
+					r.URL = regex.ReplaceAllString(r.URL, fmt.Sprintf(":%s", req.Key))
+				}
+			}
+		}
+	}
 }
 
 type FolderProperties struct {
@@ -190,6 +209,20 @@ type RequestVariable struct {
 	Key      string            `json:"key"`
 	Value    string            `json:"value"`
 	Examples []ExampleResponse `json:"-"`
+}
+
+type RequestVariables []RequestVariable
+
+func (r RequestVariables) GetRequestVariables() []RequestVariable {
+	var requests = make([]RequestVariable, 0)
+	if len(r) > 0 {
+		for _, item := range r {
+			if len(item.Examples) == 0 {
+				requests = append(requests, item)
+			}
+		}
+	}
+	return requests
 }
 
 func newExampleResponseFromText(key string, response string) *ExampleResponse {
