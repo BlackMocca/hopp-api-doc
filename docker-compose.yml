@@ -14,5 +14,6 @@ services:
       - .:/go/src/github.com/Blackmocca/hopp-api-doc
       - ./domain:/go/src/github.com/Blackmocca/hopp-api-doc/domain
       - ./assets:/go/src/github.com/Blackmocca/hopp-api-doc/assets
+      - ./public:/go/src/github.com/Blackmocca/hopp-api-doc/public
   
 

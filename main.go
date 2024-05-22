@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"net/http"
 	"os"
 	"strings"
 
@@ -16,13 +15,8 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-func registerRoute(e *echo.Echo) {
-	e.GET("/", func(c echo.Context) error {
-		resp := map[string]interface{}{
-			"hello": "world",
-		}
-		return c.JSON(http.StatusOK, resp)
-	})
+func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
+	e.GET("/", handler.Index)
 
 	group := e.Group("/docs")
 	group.Use(middleware.StaticWithConfig(middleware.StaticConfig{
@@ -67,8 +61,11 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.Logger())
+	renderer := handler.NewTemplateRenderer("./public/*.html")
+	e.Renderer = renderer
 
-	registerRoute(e)
+	httpHandler := handler.NewHttpHandler(repository)
+	registerRoute(e, httpHandler)
 	e.Logger.Fatal(e.Start(":3000"))
 
 }
