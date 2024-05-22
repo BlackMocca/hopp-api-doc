@@ -6,8 +6,45 @@
   <meta charset="UTF-8">
   <title>API Document Portal</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        console.log(cookieArr)
+        for(let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+
+            // Removing whitespace at the beginning of the cookie name and compare it with the given string
+            if(name == cookiePair[0].trim()) {
+                // Decode the cookie value and return
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+
+        // Return null if not found
+        return null;
+    }
+
+    // Example usage
+    document.addEventListener("DOMContentLoaded", () => {
+        const accessToken = getCookie("access_token");
+        if (accessToken) {
+            console.log("Access Token:", accessToken);
+            // You can now use the access token for authenticated API requests
+        } else {
+            console.error("Access token not found");
+        }
+    });
+
+    function b(){
+        link = "https://hoppscotch-api.innovasive.dev/v1/auth/microsoft?redirect_uri=https://docs.innovasive.dev"
+        console.log(link)
+        window.location.href = link
+    }
+</script>
 </head>
 <body>
-    <h1>Portal</h1>
+    <h1>Check Console for Access Token</h1>
+    <br>
+    <button onclick="b()">login local</button>
 </body>
 </html>
