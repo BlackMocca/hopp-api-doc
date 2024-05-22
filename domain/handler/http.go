@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Blackmocca/hopp-api-doc/domain"
@@ -16,5 +17,6 @@ func NewHttpHandler(psql domain.Datasource) HttpHandler {
 }
 
 func (HttpHandler) Index(c echo.Context) error {
+	fmt.Println("cookie context", c.Cookies())
 	return c.Render(http.StatusOK, "index.html", nil)
 }
