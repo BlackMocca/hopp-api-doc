@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Blackmocca/hopp-api-doc/domain"
@@ -17,8 +16,5 @@ func NewHttpHandler(psql domain.Datasource) HttpHandler {
 }
 
 func (HttpHandler) Index(c echo.Context) error {
-	fmt.Println(c.Cookies())
-	// resty.New().SetDebug(true).R().Get("https://hoppscotch-api.innovasive.dev/v1/auth/providers")
-
 	return c.Render(http.StatusOK, "index.html", nil)
 }
