@@ -149,7 +149,7 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
 	}
-	var tmpdir = filepath.Join("tmp", path)
+	var tmpdir = filepath.Join("/tmp", path)
 	if err := os.MkdirAll(tmpdir, 0755); err != nil {
 		return err
 	}
@@ -167,8 +167,8 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 		}
 	}
 
-	cmd := exec.Command("mv", "-f", filepath.Join(tmpdir, "*"), path)
-
+	cmd := exec.Command("sh", "-c", fmt.Sprintf(`cp -f %s %s`, filepath.Join(tmpdir, "*"), path))
+	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
 

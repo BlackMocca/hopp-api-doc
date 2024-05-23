@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleMenu() {
-    var elem = document.getElementById("sidebar")
+    var elem = document.getElementById("panel")
     if (elem.classList.contains("toggle-menu")) {
         elem.classList.remove("toggle-menu")
         return

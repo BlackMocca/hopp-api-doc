@@ -62,7 +62,6 @@ func (c *CronjobHandler) findTeamCollStack(team models.Team, tcolls []models.Tea
 
 func (c *CronjobHandler) Run() {
 	c.cron.NewJob(gocron.DurationJob(30*time.Second), gocron.NewTask(func() {
-		log.Info(" Starting Job")
 		var ctx = context.Background()
 		var teams, err = c.repository.FetchAllTeams(ctx)
 		if err != nil {
@@ -107,7 +106,6 @@ func (c *CronjobHandler) Run() {
 		teamMetaData, _ := json.Marshal(teamMetadata)
 		os.WriteFile(constants.TEAM_META_DATA_PATH, teamMetaData, 0755)
 
-		log.Info("Ending Job")
 	}))
 
 	c.cron.Start()
