@@ -22,7 +22,6 @@ WORKDIR /usr/app
 ENV ADDR=0.0.0.0
 ENV TZ=Asia/Bangkok
 
-RUN mkdir tmp
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/tmp/app .
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/docs docs
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/assets assets
