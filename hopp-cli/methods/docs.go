@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"reflect"
 	"strconv"
@@ -148,6 +149,10 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
 	}
+	var tmpdir = filepath.Join("tmp", path)
+	if err := os.MkdirAll(tmpdir, 0755); err != nil {
+		return err
+	}
 
 	for _, filename := range fs.List() {
 		fc, err := fs.Get(filename)
@@ -156,13 +161,15 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 		}
 		defer fc.Close()
 
-		writePath := filepath.Join(path, filename)
+		writePath := filepath.Join(tmpdir, filename)
 		if err := os.WriteFile(writePath, fc.ReadBytes(), 0664); err != nil {
 			return err
 		}
 	}
 
-	return nil
+	cmd := exec.Command("mv", "-f", tmpdir, path)
+
+	return cmd.Run()
 }
 
 // GenerateDocs generates the Documentation site from the hoppscotch-collection.json
