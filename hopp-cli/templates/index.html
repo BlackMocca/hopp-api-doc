@@ -12,6 +12,9 @@
   <div id="app"></div>
   <script>
     function getBasePath() {
+      if (window.location.pathname === "/") {
+        return "/"
+      }
       if (window.location.pathname !== "/") {
         return window.location.pathname
       }

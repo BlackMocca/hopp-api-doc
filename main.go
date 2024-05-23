@@ -18,6 +18,8 @@ import (
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	e.GET("/", handler.Index)
 
+	e.GET("/download/:collection_id", handler.Download)
+
 	e.Static("/assets", "public/assets")
 	group := e.Group("/docs")
 	group.Use(middleware.StaticWithConfig(middleware.StaticConfig{

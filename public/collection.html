@@ -1,6 +1,6 @@
 {{ define "collection" }}
 <div class="w-full">
-    <div class="grid mobile:grid-cols-1 grid-cols-3 gap-4">
+    <div class="grid mobile:grid-cols-1 grid-cols-3">
         {{ range .teams }}
         <!-- mobile display -->
         <div class="mobile:block tablet:hidden">
@@ -9,18 +9,21 @@
         {{ end }}
 
         <!-- another display -->
-        <div class="mobile:hidden text-xl font-medium">Name</div>
-        <div class="mobile:hidden text-xl font-medium">LastUpdated</div>
-        <div class="mobile:hidden text-xl font-medium">Action</div>
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">Name</div>
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">LastUpdated</div>
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">Action</div>
 
         {{ range .teams }}
-        <div class="mobile:hidden">{{ .Name }}</div>
-        <div class="mobile:hidden">{{ .LastUpdated }}</div>
-        <div class="mobile:hidden flex flex-row gap-2">
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900">{{ .Name }}</div>
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900">{{ .LastUpdated }}</div>
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900 flex flex-row gap-2">
             <div class="w-[25px]">
                 <a href="/docs/{{.Id}}">
                     <img src="/assets/view.svg"/>
                 </a>
+            </div>
+            <div class="w-[25px] cursor-pointer">
+                    <img src="/assets/download.svg" />
             </div>
         </div>
         {{ end }}
