@@ -70,22 +70,9 @@ func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 }
 
 func (h HttpHandler) Index(c echo.Context) error {
-	var ctx = context.Background()
 	fmt.Println("cookie context", c.Cookies())
 
-	teams, err := h.datasource.FetchAllTeams(ctx)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	if err := h.fillTeamCollectionMetaData(teams); err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-	}
-
-	resp := map[string]interface{}{
-		"teams": teams,
-	}
-	return c.Render(http.StatusOK, "index", resp)
+	return c.Render(http.StatusOK, "index", nil)
 }
 
 func (h HttpHandler) Download(c echo.Context) error {
@@ -110,6 +97,39 @@ func (h HttpHandler) Download(c echo.Context) error {
 	c.Response().Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s.zip"`, name))
 	c.Response().Write(bu)
 	return nil
+}
+
+func (h HttpHandler) TeamCollection(c echo.Context) error {
+	var ctx = context.Background()
+	teams, err := h.datasource.FetchAllTeams(ctx)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	if err := h.fillTeamCollectionMetaData(teams); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	resp := map[string]interface{}{
+		"teams": teams,
+	}
+	return c.Render(http.StatusOK, "collection", resp)
+}
+
+func (h HttpHandler) MyCollection(c echo.Context) error {
+	var userId = c.Param("user_id")
+	fmt.Println(userId)
+
+	var teams = []models.Team{
+		{
+			Id:   "1",
+			Name: "Wait for signin microsoft",
+		},
+	}
+	resp := map[string]interface{}{
+		"teams": teams,
+	}
+	return c.Render(http.StatusOK, "collection", resp)
 }
 
 func (h HttpHandler) zip(source, target string) error {

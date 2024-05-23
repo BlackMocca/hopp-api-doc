@@ -1,5 +1,5 @@
 {{ define "collection" }}
-<div class="w-full">
+<div id="collection" class="w-full">
     <div class="grid mobile:grid-cols-1 grid-cols-3">
         {{ range .teams }}
         <!-- mobile display -->
@@ -23,7 +23,9 @@
                 </a>
             </div>
             <div class="w-[25px] cursor-pointer">
+                <a href="/download/{{.Id}}?name={{.Name}}" target="_blank">
                     <img src="/assets/download.svg" />
+                </a>
             </div>
         </div>
         {{ end }}

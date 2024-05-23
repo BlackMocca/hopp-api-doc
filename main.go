@@ -18,6 +18,8 @@ import (
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	e.GET("/", handler.Index)
 
+	e.GET("/team/collections", handler.TeamCollection)
+	e.GET("/my/collection/:user_id", handler.MyCollection)
 	e.GET("/download/:collection_id", handler.Download)
 
 	e.Static("/assets", "public/assets")
