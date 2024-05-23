@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const elem = document.getElementById("sidebar").children[0]
 
     activeTab(elem)
-    elem.classList.add("bg-slate-200")(elem)
+    elem.classList.add("bg-slate-200")
 });
 
 function toggleMenu() {
