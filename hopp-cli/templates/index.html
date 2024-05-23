@@ -11,6 +11,13 @@
 <body>
   <div id="app"></div>
   <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var index = window.location.toString().indexOf("?id=")
+      if (index !== -1 ) {
+        window.location.href = window.location.toString().substr(0, index)
+      }
+    });
+
     function getBasePath() {
       if (window.location.pathname === "/") {
         return "/"
