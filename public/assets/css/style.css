@@ -1,0 +1,4 @@
+.toggle-menu {
+    transform: translateX(0px) !important;
+    transition: transform 0.25s ease-out;
+}

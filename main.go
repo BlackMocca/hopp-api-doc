@@ -9,7 +9,7 @@ import (
 	"github.com/Blackmocca/hopp-api-doc/domain/handler"
 	"github.com/Blackmocca/hopp-api-doc/domain/repository"
 	"github.com/go-co-op/gocron/v2"
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
@@ -18,6 +18,7 @@ import (
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	e.GET("/", handler.Index)
 
+	e.Static("/assets", "public/assets")
 	group := e.Group("/docs")
 	group.Use(middleware.StaticWithConfig(middleware.StaticConfig{
 		Skipper: func(c echo.Context) bool {
@@ -29,8 +30,8 @@ func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	}))
 }
 
-func connectDatabase(ctx context.Context, databaseURL string) *pgx.Conn {
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
+func connectDatabase(ctx context.Context, databaseURL string) *pgxpool.Pool {
+	conn, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		panic(err)
 	}
@@ -46,7 +47,7 @@ func main() {
 	log.SetLevel(log.INFO)
 	var ctx = context.Background()
 	var conn = connectDatabase(ctx, constants.DATABASE_URL)
-	defer conn.Close(ctx)
+	defer conn.Close()
 
 	repository := repository.NewPsqlRepository(conn)
 

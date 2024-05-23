@@ -1,0 +1,30 @@
+{{ define "collection" }}
+<div class="w-full">
+    <div class="grid mobile:grid-cols-1 grid-cols-3 gap-4">
+        {{ range .teams }}
+        <!-- mobile display -->
+        <div class="mobile:block tablet:hidden">
+            <a href="/docs/{{.Id}}">{{ .Name }}</a>
+        </div>
+        {{ end }}
+
+        <!-- another display -->
+        <div class="mobile:hidden text-xl font-medium">Name</div>
+        <div class="mobile:hidden text-xl font-medium">LastUpdated</div>
+        <div class="mobile:hidden text-xl font-medium">Action</div>
+
+        {{ range .teams }}
+        <div class="mobile:hidden">{{ .Name }}</div>
+        <div class="mobile:hidden">{{ .LastUpdated }}</div>
+        <div class="mobile:hidden flex flex-row gap-2">
+            <div class="w-[25px]">
+                <a href="/docs/{{.Id}}">
+                    <img src="/assets/view.svg"/>
+                </a>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+    
+</div>
+{{ end }}

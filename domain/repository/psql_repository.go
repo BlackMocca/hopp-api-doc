@@ -6,13 +6,14 @@ import (
 	"github.com/Blackmocca/hopp-api-doc/domain"
 	"github.com/Blackmocca/hopp-api-doc/domain/models"
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type psqlRepository struct {
-	db *pgx.Conn
+	db *pgxpool.Pool
 }
 
-func NewPsqlRepository(client *pgx.Conn) domain.Datasource {
+func NewPsqlRepository(client *pgxpool.Pool) domain.Datasource {
 	return &psqlRepository{db: client}
 }
 

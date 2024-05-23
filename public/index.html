@@ -1,50 +1,36 @@
+{{define "index"}}
 <!DOCTYPE html>
 <html>
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta charset="UTF-8">
-  <title>API Document Portal</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    function getCookie(name) {
-        let cookieArr = document.cookie.split(";");
-        console.log(cookieArr)
-        for(let i = 0; i < cookieArr.length; i++) {
-            let cookiePair = cookieArr[i].split("=");
-
-            // Removing whitespace at the beginning of the cookie name and compare it with the given string
-            if(name == cookiePair[0].trim()) {
-                // Decode the cookie value and return
-                return decodeURIComponent(cookiePair[1]);
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>HoppAPIDoc</title>
+    <link rel="icon" href="/assets/favicon.svg" type="image/png">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="/assets/js/script.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'mobile': {
+                            'max': '480px'
+                        },
+                        'tablet': '640px',
+                        'desktop': '1024px',
+                    }
+                }
             }
         }
-
-        // Return null if not found
-        return null;
-    }
-
-    // Example usage
-    document.addEventListener("DOMContentLoaded", () => {
-        const accessToken = getCookie("access_token");
-        if (accessToken) {
-            console.log("Access Token:", accessToken);
-            // You can now use the access token for authenticated API requests
-        } else {
-            console.error("Access token not found");
-        }
-    });
-
-    function b(){
-        link = "https://hoppscotch-api.innovasive.dev/v1/auth/microsoft?redirect_uri=https://docs.innovasive.dev"
-        console.log(link)
-        window.location.href = link
-    }
-</script>
+    </script>
 </head>
 <body>
-    <h1>Check Console for Access Token</h1>
-    <br>
-    <button onclick="b()">login local</button>
+    <div class="flex flex-row w-screen h-screen">
+        {{ template "sidebar" }}
+        {{ template "main" .}}
+    </div>
 </body>
 </html>
+{{ end }}
