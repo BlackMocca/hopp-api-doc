@@ -1,10 +1,5 @@
-let state = {
-    "current_tab_index": 0,
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const elem = document.getElementById("sidebar").children[0]
-    
     onClickSidebar(elem)
 });
 
@@ -18,9 +13,6 @@ function toggleMenu() {
 }
 
 function onClickSidebar(elem) {
-    var index = elem.getAttribute("index")
-    state["current_tab_index"] = index
-
     const elems = document.getElementById("sidebar").children
     Array.from(elems).forEach(element => {
         if (element.classList.contains("bg-slate-200")) {
@@ -35,6 +27,9 @@ function onClickSidebar(elem) {
 
 async function activeTab(elem) {
     let tabIndex = elem.getAttribute("index")
+    let titleElem = document.getElementById("title")
+    titleElem.innerHTML = elem.innerText.toUpperCase()
+
     switch (parseInt(tabIndex)) {
         case 0:
             /* team collection */

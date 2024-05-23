@@ -2,3 +2,10 @@
     transform: translateX(0px) !important;
     transition: transform 0.25s ease-out;
 }
+
+@media (max-width: 480px) {
+    .mobile\:toggle-menu-hide{
+        transform: translateX(-100%);
+        transition: transform 0.25s ease-out;
+    }
+}
