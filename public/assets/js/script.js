@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const elem = document.getElementById("sidebar").children[0]
-    onClickSidebar(elem)
+
+    activeTab(elem)
+    elem.classList.add("bg-slate-200")(elem)
 });
 
 function toggleMenu() {
@@ -23,6 +25,9 @@ function onClickSidebar(elem) {
     
     elem.classList.add("bg-slate-200")
     activeTab(elem)
+
+    /* close panel */
+    toggleMenu()
 }
 
 async function activeTab(elem) {
