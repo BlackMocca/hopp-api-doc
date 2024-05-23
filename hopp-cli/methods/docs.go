@@ -167,7 +167,7 @@ func writeFile(path string, fs stuffbin.FileSystem) error {
 		}
 	}
 
-	cmd := exec.Command("mv", "-f", tmpdir, path)
+	cmd := exec.Command("mv", "-f", filepath.Join(tmpdir, "*"), path)
 
 	return cmd.Run()
 }
