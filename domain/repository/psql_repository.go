@@ -76,3 +76,35 @@ func (p psqlRepository) FetchAllTeamRequest(ctx context.Context, teamId string) 
 
 	return ptrs, nil
 }
+
+func (p psqlRepository) fetchInfraConfigs(ctx context.Context, pattern string) ([]models.InfraConfig, error) {
+	sql := `SELECT id, name, value, active FROM "InfraConfig" WHERE name LIKE $1::text`
+	rows, err := p.db.Query(ctx, sql, pattern)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ptrs, err := pgx.CollectRows(rows, pgx.RowToStructByPos[models.InfraConfig])
+	if err != nil {
+		return nil, err
+	}
+
+	return ptrs, nil
+}
+
+func (p psqlRepository) FetchAuthProviders(ctx context.Context) ([]string, error) {
+	var providers = make([]string, 0)
+	configs, err := p.fetchInfraConfigs(ctx, "VITE_ALLOWED_AUTH_PROVIDERS")
+	if err != nil {
+		return nil, err
+	}
+	if len(configs) == 0 {
+		return providers, nil
+	}
+	for _, item := range configs {
+		providers = append(providers, item.Value)
+	}
+
+	return providers, nil
+}

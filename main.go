@@ -18,6 +18,7 @@ import (
 
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	e.GET("/", handler.Index, myMiddL.AuthSession(false))
+	e.GET("/login", handler.Login, myMiddL.AuthSession(true))
 
 	e.GET("/team/collections", handler.TeamCollection, myMiddL.AuthSession(false))
 	e.GET("/my/collection/:user_id", handler.MyCollection, myMiddL.AuthSession(false))

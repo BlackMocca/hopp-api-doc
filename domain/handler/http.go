@@ -70,8 +70,27 @@ func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 }
 
 func (h HttpHandler) Index(c echo.Context) error {
-
+	fmt.Println("xcmasl;dksa;ldkjsa;lkd;salk;")
 	return c.Render(http.StatusOK, "index", nil)
+}
+
+func (h HttpHandler) Login(c echo.Context) error {
+	var ctx = c.Request().Context()
+	var session = c.Get("session")
+	var isAuth = (session != nil && session != "")
+	if isAuth {
+		return c.Redirect(http.StatusTemporaryRedirect, "/")
+	}
+
+	providers, err := h.datasource.FetchAuthProviders(ctx)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	resp := map[string]interface{}{
+		"providers": providers,
+	}
+	return c.Render(http.StatusOK, "login", resp)
 }
 
 func (h HttpHandler) Download(c echo.Context) error {

@@ -4,12 +4,23 @@ import (
 	"html/template"
 	"io"
 	"path/filepath"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
 type TemplateRenderer struct {
 	templates *template.Template
+}
+
+func strTitle(data interface{}) string {
+	return strings.Title(strings.ToLower(data.(string)))
+}
+
+func templateHelperFunc() template.FuncMap {
+	return map[string]any{
+		"helper_str_title": strTitle,
+	}
 }
 
 // Render renders a template document
@@ -24,6 +35,7 @@ func NewTemplateRenderer(glob string) *TemplateRenderer {
 		panic(err)
 	}
 
-	templates := template.Must(template.ParseFiles(allFiles...))
-	return &TemplateRenderer{templates: templates}
+	templates := template.Must(template.New("").Funcs(templateHelperFunc()).ParseFiles(allFiles...))
+	ptr := &TemplateRenderer{templates: templates}
+	return ptr
 }

@@ -1,36 +1,7 @@
 {{define "index"}}
 <!DOCTYPE html>
 <html>
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
-    <title>HoppAPIDoc</title>
-    <link rel="icon" href="/assets/favicon.svg" type="image/png">
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <script src="/assets/js/script.js"></script>
-    <script src="/assets/js/api.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    screens: {
-                        'mobile': {
-                            'max': '480px'
-                        },
-                        'tablet': '640px',
-                        'desktop': '1024px',
-                    },
-                    colors: {
-                        'primary': '#4b6cb7',
-                        'secondary': '#182848'
-                    }
-                }
-            }
-        }
-    </script>
-</head>
+{{ template "meta" }}
 <body>
     <div class="flex flex-row w-screen h-screen">
         {{ if .is_auth }}
