@@ -70,7 +70,6 @@ func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 }
 
 func (h HttpHandler) Index(c echo.Context) error {
-	fmt.Println("cookie context", c.Cookies())
 
 	return c.Render(http.StatusOK, "index", nil)
 }

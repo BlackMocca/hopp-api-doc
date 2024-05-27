@@ -7,6 +7,7 @@ import (
 
 	"github.com/Blackmocca/hopp-api-doc/domain/constants"
 	"github.com/Blackmocca/hopp-api-doc/domain/handler"
+	myMiddL "github.com/Blackmocca/hopp-api-doc/domain/middleware"
 	"github.com/Blackmocca/hopp-api-doc/domain/repository"
 	"github.com/go-co-op/gocron/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -16,11 +17,11 @@ import (
 )
 
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
-	e.GET("/", handler.Index)
+	e.GET("/", handler.Index, myMiddL.AuthSession(false))
 
-	e.GET("/team/collections", handler.TeamCollection)
-	e.GET("/my/collection/:user_id", handler.MyCollection)
-	e.GET("/download/:collection_id", handler.Download)
+	e.GET("/team/collections", handler.TeamCollection, myMiddL.AuthSession(false))
+	e.GET("/my/collection/:user_id", handler.MyCollection, myMiddL.AuthSession(false))
+	e.GET("/download/:collection_id", handler.Download, myMiddL.AuthSession(false))
 
 	e.Static("/assets", "public/assets")
 	group := e.Group("/docs")
