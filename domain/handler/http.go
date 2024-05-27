@@ -123,7 +123,7 @@ func (h HttpHandler) MyCollection(c echo.Context) error {
 	var teams = []models.Team{
 		{
 			Id:   "1",
-			Name: "Wait for signin microsoft",
+			Name: "Wait for Implement",
 		},
 	}
 	resp := map[string]interface{}{

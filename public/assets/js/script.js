@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     activeTab(elem)
     elem.classList.add("bg-slate-200")
+    elem.classList.add("text-[#000000]")
 });
 
 function toggleMenu() {
@@ -20,10 +21,14 @@ function onClickSidebar(elem) {
         if (element.classList.contains("bg-slate-200")) {
             element.classList.remove("bg-slate-200")
         }
+        if (element.classList.contains("text-[#000000]")) {
+            element.classList.remove("text-[#000000]")
+        }
     });
 
     
     elem.classList.add("bg-slate-200")
+    elem.classList.add("text-[#000000]")
     activeTab(elem)
 
     /* close panel */
