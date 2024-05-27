@@ -47,6 +47,13 @@ func (h HttpHandler) readMetadata(path string) (map[string]interface{}, error) {
 	return meta, nil
 }
 
+func (h HttpHandler) getSessionUser(c echo.Context) *models.User {
+	if user := c.Get("session"); user != nil {
+		return user.(*models.User)
+	}
+	return nil
+}
+
 func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 	if len(teams) == 0 {
 		return nil
@@ -72,25 +79,19 @@ func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 }
 
 func (h HttpHandler) Index(c echo.Context) error {
-	fmt.Println("xcmasl;dksa;ldkjsa;lkd;salk;")
-	return c.Render(http.StatusOK, "index", nil)
+	resp := map[string]interface{}{
+		"user": h.getSessionUser(c),
+	}
+	return c.Render(http.StatusOK, "index", resp)
 }
 
 func (h HttpHandler) Login(c echo.Context) error {
 	var ctx = c.Request().Context()
-	var session = c.Get("session")
-	var isAuth = (session != nil && session != "")
+	var session = h.getSessionUser(c)
+	var isAuth = (session != nil)
 	if isAuth {
 		return c.Redirect(http.StatusTemporaryRedirect, "/")
 	}
-	// c.SetCookie(&http.Cookie{
-	// 	Name:     "12312312",
-	// 	Value:    "123w321",
-	// 	Expires:  time.Now().Add(24 * time.Hour),
-	// 	HttpOnly: true,
-	// 	Secure:   true,
-	// 	SameSite: http.SameSiteLaxMode,
-	// })
 
 	providers, err := h.datasource.FetchAuthProviders(ctx)
 	if err != nil {
@@ -140,6 +141,7 @@ func (h HttpHandler) TeamCollection(c echo.Context) error {
 
 	resp := map[string]interface{}{
 		"teams": teams,
+		"user":  h.getSessionUser(c),
 	}
 	return c.Render(http.StatusOK, "collection", resp)
 }
@@ -156,6 +158,7 @@ func (h HttpHandler) MyCollection(c echo.Context) error {
 	}
 	resp := map[string]interface{}{
 		"teams": teams,
+		"user":  h.getSessionUser(c),
 	}
 	return c.Render(http.StatusOK, "collection", resp)
 }
@@ -259,6 +262,27 @@ func (h HttpHandler) AuthProviderCallback(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, errProfile.Error())
 	}
 
-	fmt.Println(profile)
+	var user, err = h.datasource.FetchOneUser(ctx, profile.Username)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, errProfile.Error())
+	}
+
+	if user == nil {
+		resp := map[string]interface{}{
+			"error":             "User Not Found",
+			"error_description": strings.Title("Please Register User at hoppscotch app before usage this app"),
+		}
+		return c.Render(http.StatusOK, "error", resp)
+	}
+
+	c.SetCookie(&http.Cookie{
+		Name:     constants.COOKIE_SESSION_NAME,
+		Value:    user.EncodeHex(),
+		Expires:  time.Now().AddDate(0, 0, 30),
+		Path:     "/",
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }

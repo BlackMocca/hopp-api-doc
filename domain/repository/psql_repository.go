@@ -108,3 +108,22 @@ func (p psqlRepository) FetchAuthProviders(ctx context.Context) ([]string, error
 
 	return providers, nil
 }
+
+func (p psqlRepository) FetchOneUser(ctx context.Context, email string) (*models.User, error) {
+	sql := `SELECT uid, "displayName", email, "photoURL", "isAdmin" FROM "User" WHERE email = $1::text`
+	rows, err := p.db.Query(ctx, sql, email)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	ptr, err := pgx.CollectOneRow(rows, pgx.RowToStructByPos[models.User])
+	if err != nil && err != pgx.ErrNoRows {
+		return nil, err
+	}
+
+	if ptr.Id == "" {
+		return nil, nil
+	}
+	return &ptr, nil
+}

@@ -11,6 +11,7 @@ type Datasource interface {
 	FetchAllTeamCollection(ctx context.Context, teamId string) ([]models.TeamCollection, error)
 	FetchAllTeamRequest(ctx context.Context, teamId string) ([]models.TeamRequest, error)
 	FetchAuthProviders(ctx context.Context) ([]string, error)
+	FetchOneUser(ctx context.Context, email string) (*models.User, error)
 }
 
 type AuthProvider interface {
