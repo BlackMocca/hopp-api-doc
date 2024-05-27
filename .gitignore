@@ -45,5 +45,5 @@ api/docs/*
 web/tmp/*
 .env
 tmp/*
-assets/*
+assets/**/**.json
 docs/*
