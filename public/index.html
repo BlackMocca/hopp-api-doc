@@ -1,0 +1,16 @@
+{{define "index"}}
+<!DOCTYPE html>
+<html>
+{{ template "meta" }}
+<body>
+    <div class="flex flex-row w-screen h-screen">
+        {{ if .user }}
+            {{ template "sidebar" .}}
+            {{ template "main" .}}
+        {{ else }}
+            {{ template "unauthorize" }}
+        {{ end }}
+    </div>
+</body>
+</html>
+{{ end }}

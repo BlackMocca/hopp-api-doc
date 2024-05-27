@@ -42,8 +42,3 @@ docs.md
 .DS_Store
 cli
 api/docs/*
-web/tmp/*
-.env
-tmp/*
-assets/**/**.json
-docs/*

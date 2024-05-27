@@ -1,0 +1,36 @@
+{{ define "collection" }}
+<div id="collection" class="w-full">
+    <div class="grid mobile:grid-cols-1 grid-cols-3">
+        {{ range .teams }}
+        <!-- mobile display -->
+        <div class="flex flex-row gap-2 mobile:flex tablet:hidden py-4">
+            <img src="/assets/view.svg" class="w-[25px]"/>
+            <a href="/docs/{{.Id}}" class="text-xl underline decoration-solid">{{ .Name }}</a>
+        </div>
+        {{ end }}
+
+        <!-- another display -->
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">Name</div>
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">LastUpdated</div>
+        <div class="mobile:hidden text-md p-2 font-medium border-2 border-grey-900">Action</div>
+
+        {{ range .teams }}
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900">{{ .Name }}</div>
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900">{{ .LastUpdated }}</div>
+        <div class="mobile:hidden p-2 border-[1px] border-grey-900 flex flex-row gap-2">
+            <div class="w-[25px]">
+                <a href="/docs/{{.Id}}">
+                    <img src="/assets/view.svg"/>
+                </a>
+            </div>
+            <div class="w-[25px] cursor-pointer">
+                <a href="/download/{{.Id}}?name={{.Name}}" target="_blank">
+                    <img src="/assets/download.svg" />
+                </a>
+            </div>
+        </div>
+        {{ end }}
+    </div>
+    
+</div>
+{{ end }}

@@ -1,0 +1,22 @@
+{{define "login"}}
+<!DOCTYPE html>
+<html>
+{{ template "meta" }}
+<body>
+    <div class="flex flex-col gap-6 w-screen h-screen justify-center items-center bg-gradient-to-r from-primary to-secondary">
+        <div class="mobile:w-5/6 w-2/6 pb-4 border-b-2 border-grey-300">
+            <img src="/assets/logo.svg" class="w-full"/>
+        </div>
+        <p class="text-3xl text-white">Sign in</p>
+        <div class="mobile:w-5/6 w-2/6 p-6 flex flex-col gap-4 bg-white shadow shadow-inner rounded">
+            {{ range .providers }}
+                <div class="flex flex-row gap-4 bg-white items-center hover:cursor-pointer shadow shadow-md rounded" onclick="authProvider('{{ . }}')">
+                    <img src="/assets/microsoft.svg" class="w-[40px]">
+                    <p class="text-lg">Continue with {{ helper_str_title . }}</p>
+                </div>
+            {{ end }}
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}
