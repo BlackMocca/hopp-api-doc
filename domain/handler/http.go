@@ -234,10 +234,31 @@ func (h HttpHandler) AuthProvider(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
 
-	fmt.Println(uri)
 	return c.Redirect(http.StatusTemporaryRedirect, uri)
 }
 
 func (h HttpHandler) AuthProviderCallback(c echo.Context) error {
+	var ctx = c.Request().Context()
+	var code = c.QueryParam("code")
+	var state = c.QueryParam("state")
+	var provider = constants.AuthProvider(strings.ToUpper(c.Param("provider")))
+
+	var profile *models.ProfileProvider
+	var errProfile error
+	switch provider {
+	case constants.AUTH_PROVIDER_MICROSOFT:
+		jwt, err := h.microsoftAuth.SignToken(ctx, code, state)
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+
+		profile, errProfile = h.microsoftAuth.Me(ctx, jwt.AccessToken)
+	}
+
+	if errProfile != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, errProfile.Error())
+	}
+
+	fmt.Println(profile)
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
