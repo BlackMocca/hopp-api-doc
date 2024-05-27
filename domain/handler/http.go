@@ -130,7 +130,9 @@ func (h HttpHandler) Download(c echo.Context) error {
 
 func (h HttpHandler) TeamCollection(c echo.Context) error {
 	var ctx = context.Background()
-	teams, err := h.datasource.FetchAllTeams(ctx)
+	var user = c.Get("session").(*models.User)
+
+	teams, err := h.datasource.FetchMyTeams(ctx, user.Id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
@@ -285,4 +287,22 @@ func (h HttpHandler) AuthProviderCallback(c echo.Context) error {
 		SameSite: http.SameSiteLaxMode,
 	})
 	return c.Redirect(http.StatusTemporaryRedirect, "/")
+}
+
+func (h HttpHandler) Signout(c echo.Context) error {
+	_, err := c.Cookie(constants.COOKIE_SESSION_NAME)
+	if err != nil && err != http.ErrNoCookie {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	c.SetCookie(&http.Cookie{
+		Name:     constants.COOKIE_SESSION_NAME,
+		Value:    "",
+		Expires:  time.Unix(0, 0),
+		MaxAge:   -1,
+		Path:     "/",
+		Secure:   true,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+	return c.JSON(http.StatusOK, "success")
 }

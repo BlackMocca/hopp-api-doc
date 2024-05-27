@@ -4,8 +4,8 @@
 {{ template "meta" }}
 <body>
     <div class="flex flex-row w-screen h-screen">
-        {{ if .is_auth }}
-            {{ template "sidebar" }}
+        {{ if .user }}
+            {{ template "sidebar" .}}
             {{ template "main" .}}
         {{ else }}
             {{ template "unauthorize" }}

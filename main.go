@@ -31,6 +31,9 @@ func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	e.GET("/v1/auth/signin", handler.AuthProvider)
 	e.GET("/v1/auth/:provider/callback", handler.AuthProviderCallback)
 
+	// signout
+	e.POST("/signout", handler.Signout, myMiddL.AuthSession(true))
+
 	e.Static("/assets", "public/assets")
 	group := e.Group("/docs")
 	group.Use(middleware.StaticWithConfig(middleware.StaticConfig{

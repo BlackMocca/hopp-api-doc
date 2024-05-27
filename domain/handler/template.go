@@ -4,13 +4,23 @@ import (
 	"html/template"
 	"io"
 	"path/filepath"
+	"reflect"
 	"strings"
 
+	"github.com/guregu/null/zero"
 	"github.com/labstack/echo/v4"
+	"github.com/spf13/cast"
 )
 
 type TemplateRenderer struct {
 	templates *template.Template
+}
+
+func toString(data interface{}) string {
+	if reflect.TypeOf(data).String() == reflect.TypeOf(zero.String{}).String() {
+		return data.(zero.String).ValueOrZero()
+	}
+	return cast.ToString(data)
 }
 
 func strTitle(data interface{}) string {
@@ -20,6 +30,7 @@ func strTitle(data interface{}) string {
 func templateHelperFunc() template.FuncMap {
 	return map[string]any{
 		"helper_str_title": strTitle,
+		"helper_to_string": toString,
 	}
 }
 

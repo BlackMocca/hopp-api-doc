@@ -1,12 +1,12 @@
 {{define "sidebar"}}
 <!-- mobile display -->
-<div class="tablet:hidden fixed bottom-0 z-50" onclick="toggleMenu()">
+<div class="tablet:hidden fixed bottom-0 pb-4 pl-2 z-50" onclick="toggleMenu()">
     <div class="w-[50px] h-[50px] bg-transparent border-none">
         <img src="/assets/menu-burger.svg"/>
     </div>
 </div>
 
-<div id="panel" class="mobile:w-screen mobile:h-screen mobile:fixed mobile:toggle-menu-hide z-40 flex flex-col w-[300px] border-r-2 border-grey-300 px-4 py-6 bg-gradient-to-r from-primary to-secondary text-white">
+<div id="panel" class="mobile:w-screen mobile:h-screen mobile:fixed mobile:toggle-menu-hide mobile:pb-[70px] z-40 flex flex-col w-[300px] border-r-2 border-grey-300 px-4 py-6 bg-gradient-to-r from-primary to-secondary text-white">
     <div class="w-full pt-3 pb-5 border-b-2 border-grey-300">
         <a href="/"><img src="/assets/logo.svg"/></a>
     </div>
@@ -14,6 +14,16 @@
         <div index="0" onclick="onClickSidebar(this)" class="py-3 px-2 cursor-pointer hover:bg-slate-100 hover:text-black"><p class="text-xl">Team Collection</p></div>
         <div index="1" onclick="onClickSidebar(this)" class="py-3 px-2 cursor-pointer hover:bg-slate-100 hover:text-black"><p class="text-xl">My Collection</p></div>
         <div index="2" onclick="onClickSidebar(this)" class="py-3 px-2 cursor-pointer hover:bg-slate-100 hover:text-black"><p class="text-xl">Guide</p></div>
+    </div>
+    <div class="flex flex-col w-full h-full justify-end items-start">
+        <div class="flex flex-row gap-3 w-full py-3 px-2">
+            <img src="/assets/user.svg" class="w-[1.25rem]"/>
+            <p class="text-sm">{{ helper_to_string .user.DisplayName }}</p> 
+        </div>
+        <div onclick="logout()" class="flex flex-row gap-3 w-full py-3 px-2 cursor-pointer hover:bg-slate-100 hover:text-black">
+            <img src="/assets/logout.svg" class="w-[1.25rem]"/>
+            <p class="text-xl">Logout</p> 
+        </div>
     </div>
 </div>
 {{end}}

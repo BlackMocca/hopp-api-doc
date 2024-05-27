@@ -56,3 +56,9 @@ async function activeTab(elem) {
             break
     }
 }
+
+async function logout() {
+    await signout()
+
+    window.location.href = "/login"
+}

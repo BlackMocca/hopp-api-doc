@@ -127,3 +127,25 @@ func (p psqlRepository) FetchOneUser(ctx context.Context, email string) (*models
 	}
 	return &ptr, nil
 }
+
+func (p psqlRepository) FetchMyTeams(ctx context.Context, userId string) ([]models.Team, error) {
+	sql := `
+		SELECT t.* 
+		FROM "Team" t
+		JOIN "TeamMember" tm
+		ON t.id = tm."teamID"
+		WHERE tm."userUid" = $1::text
+	`
+	rows, err := p.db.Query(ctx, sql, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	teams, err := pgx.CollectRows(rows, pgx.RowToStructByPos[models.Team])
+	if err != nil {
+		return nil, err
+	}
+
+	return teams, nil
+}
