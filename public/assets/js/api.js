@@ -31,3 +31,9 @@ async function getUserCollection(userId) {
         // Handle errors
     }
 }
+
+function authProvider(provider) {
+  const searchParams = new URLSearchParams();
+  searchParams.set("provider", provider)
+  window.location.href = "/v1/auth/signin?" + searchParams.toString()
+}

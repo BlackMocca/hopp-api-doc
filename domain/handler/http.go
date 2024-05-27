@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"archive/zip"
@@ -21,11 +22,12 @@ import (
 )
 
 type HttpHandler struct {
-	datasource domain.Datasource
+	datasource    domain.Datasource
+	microsoftAuth domain.AuthProvider
 }
 
-func NewHttpHandler(datasource domain.Datasource) HttpHandler {
-	return HttpHandler{datasource: datasource}
+func NewHttpHandler(datasource domain.Datasource, microsoftAuth domain.AuthProvider) HttpHandler {
+	return HttpHandler{datasource: datasource, microsoftAuth: microsoftAuth}
 }
 
 func (h HttpHandler) readMetadata(path string) (map[string]interface{}, error) {
@@ -81,6 +83,14 @@ func (h HttpHandler) Login(c echo.Context) error {
 	if isAuth {
 		return c.Redirect(http.StatusTemporaryRedirect, "/")
 	}
+	// c.SetCookie(&http.Cookie{
+	// 	Name:     "12312312",
+	// 	Value:    "123w321",
+	// 	Expires:  time.Now().Add(24 * time.Hour),
+	// 	HttpOnly: true,
+	// 	Secure:   true,
+	// 	SameSite: http.SameSiteLaxMode,
+	// })
 
 	providers, err := h.datasource.FetchAuthProviders(ctx)
 	if err != nil {
@@ -204,4 +214,30 @@ func (h HttpHandler) zip(source, target string) error {
 		_, err = io.Copy(headerWriter, f)
 		return err
 	})
+}
+
+func (h HttpHandler) AuthProvider(c echo.Context) error {
+	var ctx = c.Request().Context()
+	var provider = constants.AuthProvider(strings.ToUpper(c.QueryParam("provider")))
+	if !provider.Valid() {
+		return echo.NewHTTPError(http.StatusBadRequest, "provider was invalid")
+	}
+
+	var uri string
+	var err error
+	switch provider {
+	case constants.AUTH_PROVIDER_MICROSOFT:
+		uri, err = h.microsoftAuth.LinkAuth(ctx)
+	}
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	fmt.Println(uri)
+	return c.Redirect(http.StatusTemporaryRedirect, uri)
+}
+
+func (h HttpHandler) AuthProviderCallback(c echo.Context) error {
+	return c.Redirect(http.StatusTemporaryRedirect, "/")
 }
