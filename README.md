@@ -12,7 +12,7 @@
 - [✅] Support Request Body Content-Type (`applicatioon/json`, `multipart/form-data`, `application/x-www-form-urlencoded`)
 - [✅] Request & Collection Support Header And Auth Type `Basic Auth`, `API KEY`, `Bearer Token`
 
-- [ ] Import Hoppscotch Collection to generate Document 
+- [✅] Import Hoppscotch Collection to generate Document 
 - [ ] Authenticate With Google
 - [ ] Authenticate With Github
 - [ ] Request & Collection Support Auth Type `Oauth 2.0`
@@ -21,12 +21,12 @@
 
 Pull Images 
 ```shell
-docker pull blackmocca/hopp-api-doc:v1.0.0-linux-amd64 
+docker pull blackmocca/hopp-api-doc:v1.1.0-linux-amd64 
 ```
 
 Run Images
 ```shell
-docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart blackmocca/hopp-api-doc:v1.0.0-linux-amd64 
+docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart blackmocca/hopp-api-doc:v1.1.0-linux-amd64 
 ```
 
 ## Demo    
