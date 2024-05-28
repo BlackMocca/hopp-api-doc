@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -17,6 +19,8 @@ import (
 	"github.com/Blackmocca/hopp-api-doc/domain"
 	"github.com/Blackmocca/hopp-api-doc/domain/constants"
 	"github.com/Blackmocca/hopp-api-doc/domain/models"
+	docs "github.com/Blackmocca/hopp-api-doc/hopp-cli/methods"
+	"github.com/gosimple/slug"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/cast"
 )
@@ -153,20 +157,17 @@ func (h HttpHandler) TeamCollection(c echo.Context) error {
 }
 
 func (h HttpHandler) MyCollection(c echo.Context) error {
-	var userId = c.Param("user_id")
-	fmt.Println(userId)
-
-	var teams = []models.Team{
-		{
-			Id:   "1",
-			Name: "Wait for Implement",
-		},
+	var user = h.getSessionUser(c)
+	var teams, err = h.getMyCollection(user.Id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
 	}
+
 	resp := map[string]interface{}{
 		"teams": teams,
-		"user":  h.getSessionUser(c),
+		"user":  user,
 	}
-	return c.Render(http.StatusOK, "collection", resp)
+	return c.Render(http.StatusOK, "mycollection", resp)
 }
 
 func (h HttpHandler) zip(source, target string) error {
@@ -309,4 +310,69 @@ func (h HttpHandler) Signout(c echo.Context) error {
 		SameSite: http.SameSiteLaxMode,
 	})
 	return c.JSON(http.StatusOK, "success")
+}
+
+func (h HttpHandler) ImportCollection(c echo.Context) error {
+	var session = h.getSessionUser(c)
+	var file, err = c.FormFile("file")
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	f, err := file.Open()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	defer f.Close()
+
+	var buf = bytes.Buffer{}
+	io.Copy(&buf, f)
+
+	/* manual + filename  */
+	var now = time.Now().Format(time.RFC3339)
+	var getDirName = func(prefix string, userId string, filename string) string {
+		return fmt.Sprintf("%s/%s_manual_%s_%s", prefix, userId, now, slug.Make(strings.TrimSuffix(filename, ".json")))
+	}
+	var dirTeam = filepath.Join(getDirName("./assets", session.Id, file.Filename))
+	os.Mkdir(dirTeam, 0755)
+
+	var filePath = filepath.Join(dirTeam, "./data.json")
+	os.WriteFile(filePath, buf.Bytes(), 0755)
+
+	var pathOut = fmt.Sprintf(getDirName("./docs", session.Id, file.Filename))
+	if err := docs.GenerateDocs(pathOut, filePath, 0, false, "./hopp-cli/templates"); err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	return h.MyCollection(c)
+}
+
+func (h HttpHandler) getMyCollection(userId string) ([]models.Team, error) {
+	var collections = make([]models.Team, 0)
+	var fileInfo, err = ioutil.ReadDir("./docs")
+	if err != nil && err != os.ErrNotExist {
+		return collections, nil
+	}
+
+	for _, file := range fileInfo {
+		if !file.IsDir() {
+			continue
+		}
+
+		split := strings.Split(file.Name(), "_")
+		if len(split) > 1 {
+			lastUpdated, err := time.Parse(time.RFC3339, split[2])
+			if err != nil {
+				return nil, err
+			}
+			name := fmt.Sprintf("%s_%s", lastUpdated.Format("20060102_150405"), split[3])
+			var ptr = models.Team{
+				Id:          file.Name(),
+				Name:        name,
+				LastUpdated: lastUpdated.Format(constants.TIMESTAMP_LAYOUT),
+			}
+			collections = append(collections, ptr)
+		}
+	}
+	return collections, nil
 }

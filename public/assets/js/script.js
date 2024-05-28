@@ -48,7 +48,7 @@ async function activeTab(elem) {
             break
         case 1:
             /* user collection */
-            let collections = await getUserCollection("tmp12345")
+            let collections = await getUserCollection()
             document.getElementById("collection").innerHTML = collections
             break
         case 2:
@@ -61,4 +61,18 @@ async function logout() {
     await signout()
 
     window.location.href = "/login"
+}
+
+function triggerFileInput(elementId) {
+    document.getElementById(elementId).click()
+}
+
+async function onChangeImportCollection(elem) {
+    if (elem.files.length > 0) {
+        const file = elem.files[0]
+        if (file) {
+            let mycollections = await importCollection(file)
+            document.getElementById("collection").innerHTML = mycollections
+        }
+    } 
 }

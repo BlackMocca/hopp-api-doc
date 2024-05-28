@@ -1,0 +1,14 @@
+{{ define "mycollection" }}
+<div class="flex flex-row py-2 justify-end w-full">
+    <button 
+        class="px-3 py-2 rounded cursor-pointer bg-primary text-white shadow shadow-md"
+        onclick="triggerFileInput('import-collection')"
+    >
+        Import
+        <input id="import-collection" type="file" class="hidden" accept="application/json" onchange="onChangeImportCollection(this)">
+    </button>
+</div>
+
+{{template "collection" .}}
+
+{{ end }}

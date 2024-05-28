@@ -3,7 +3,7 @@
 <html>
 {{ template "meta" }}
 <body>
-    <div class="flex flex-row w-screen h-screen">
+    <div class="mobile:overflow-y-auto flex flex-row w-screen h-screen">
         {{ if .user }}
             {{ template "sidebar" .}}
             {{ template "main" .}}
