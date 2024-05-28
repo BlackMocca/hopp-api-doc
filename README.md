@@ -26,7 +26,7 @@ docker pull blackmocca/hopp-api-doc:v1.0.0-linux-amd64
 
 Run Images
 ```shell
-docker run --name hopp-api-doc -p 3200:3000 --env-file=.env -d --restart blackmocca/hopp-api-doc:v1.0.0-linux-amd64 
+docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart blackmocca/hopp-api-doc:v1.0.0-linux-amd64 
 ```
 
 ## Demo    
