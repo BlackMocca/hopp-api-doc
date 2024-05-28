@@ -79,6 +79,10 @@ func (h HttpHandler) fillTeamCollectionMetaData(teams []models.Team) error {
 }
 
 func (h HttpHandler) Index(c echo.Context) error {
+	if session := h.getSessionUser(c); session == nil {
+		return c.Redirect(http.StatusTemporaryRedirect, "/login")
+	}
+
 	resp := map[string]interface{}{
 		"user": h.getSessionUser(c),
 	}
