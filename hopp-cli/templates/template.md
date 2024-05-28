@@ -72,7 +72,7 @@
 {{- range .Requests}}
 
 ---
-## [{{ .Method }}] {{ .Name}}
+## [{{ .Method }}] {{ .Name }} :id={{ getSlug . }}
 
 **Method**: {{ .Method}}
 
@@ -372,7 +372,7 @@ Password: `{{ .Pass}}`
 
 ---
 
-#### [{{ .Method }}] {{.Name}}
+#### [{{ .Method }}] {{.Name}} :id={{ getSlug . }}
 
 **Method**: {{.Method}}
 
@@ -549,7 +549,7 @@ Password: `{{ .Pass}}`
 
 ---
 
-### [{{ .Method }}] {{.Name}}
+### [{{ .Method }}] {{.Name}} :id={{ getSlug . }}
 
 **Method**: {{.Method}}
 

@@ -20,12 +20,13 @@ import (
 
 func registerRoute(e *echo.Echo, handler handler.HttpHandler) {
 	// internal app
-	e.GET("/", handler.Index, myMiddL.AuthSession(false))
+	e.GET("/", handler.Index, myMiddL.AuthSession(true))
 	e.GET("/login", handler.Login, myMiddL.AuthSession(true))
 
 	e.GET("/team/collections", handler.TeamCollection, myMiddL.AuthSession(false))
-	e.GET("/my/collection/:user_id", handler.MyCollection, myMiddL.AuthSession(false))
+	e.GET("/my/collection", handler.MyCollection, myMiddL.AuthSession(false))
 	e.GET("/download/:collection_id", handler.Download, myMiddL.AuthSession(false))
+	e.POST("/import", handler.ImportCollection, myMiddL.AuthSession(false))
 
 	// signin provider
 	e.GET("/v1/auth/signin", handler.AuthProvider)

@@ -11,6 +11,7 @@ import (
 
 // Collection hold the structure of the basic `postwoman-collection.json`
 type Collection struct {
+	Version int `json:"v"`
 	// Name of the Whole Collection
 	Name string `json:"name"`
 	// Folders JSON Type
@@ -21,6 +22,36 @@ type Collection struct {
 
 	// Set Data into Collection
 	Property FolderProperties `json:"data"`
+
+	// for Folder v2
+	Headers []Headers `json:"headers"`
+	Auth    AuthType  `json:"auth"`
+}
+
+func (c *Collection) UnmarshalJSON(data []byte) error {
+	type tmp Collection
+	var ptr = tmp{}
+	if err := json.Unmarshal(data, &ptr); err != nil {
+		return err
+	}
+
+	c.Version = ptr.Version
+	c.Name = ptr.Name
+	c.Folders = ptr.Folders
+	c.Requests = ptr.Requests
+	c.Property = ptr.Property
+
+	/* for user collection */
+	switch ptr.Version {
+	case 2:
+		c.Property.Auth = ptr.Auth
+		c.Property.Headers = ptr.Headers
+		if c.Property.Auth.AddTo == "" {
+			c.Property.Auth.AddTo = "HEADERS"
+		}
+	}
+
+	return nil
 }
 
 // Folders can be organized to Folders
