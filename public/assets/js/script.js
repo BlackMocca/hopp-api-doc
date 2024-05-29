@@ -51,9 +51,6 @@ async function activeTab(elem) {
             let collections = await getUserCollection()
             document.getElementById("collection").innerHTML = collections
             break
-        case 2:
-            /* guide */
-            break
     }
 }
 
@@ -75,4 +72,10 @@ async function onChangeImportCollection(elem) {
             document.getElementById("collection").innerHTML = mycollections
         }
     } 
+}
+
+
+async function deleteMyCollection(collectionId) {
+    let mycollections = await apiDeleteMyCollection(collectionId)
+    document.getElementById("collection").innerHTML = mycollections
 }

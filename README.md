@@ -46,7 +46,8 @@ docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-f
 ## Environment
 | Name       | Description    |
 |-----------|------------|
-| DATABASE_URL  | connection string ของระบบฐานข้อมุล Postgresql      |
+| DATABASE_URL  | connection string Postgresql      |
+| TIMER_SYNC_TEAM_COLLECTION  | define sync team collection in unit `second` |
 | MICROSOFT_CLIENT_ID | Microsoft Oauth2 Client Id     |
 | MICROSOFT_CLIENT_SECRET| Microsoft Oauth2 Client Secret  |
 | MICROSOFT_CALLBACK_URL| Microsoft Oauth2 Valid Redirect `https://$yourdomain/v1/auth/microsoft/callback`|

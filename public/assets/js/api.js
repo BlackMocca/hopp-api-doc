@@ -73,3 +73,20 @@ async function importCollection(file) {
     console.error('Error at import collection:', error);
   }
 }
+
+async function apiDeleteMyCollection(collectionId) {
+  try {
+      const response = await fetch('/my/collection/'+collectionId, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      return await response.text();
+    } catch (error) {
+      console.error('Error at delete my collection:', error);
+      // Handle errors
+  }
+}

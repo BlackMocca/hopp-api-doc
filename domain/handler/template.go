@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"strings"
+	"time"
 
 	"github.com/guregu/null/zero"
 	"github.com/labstack/echo/v4"
@@ -27,10 +28,22 @@ func strTitle(data interface{}) string {
 	return strings.Title(strings.ToLower(data.(string)))
 }
 
+func isMyCollection(data interface{}) bool {
+	spl := strings.Split(cast.ToString(data), "_")
+	if len(spl) > 2 {
+		var isManual = strings.EqualFold(spl[1], "manual")
+		var _, isTime = time.Parse(time.RFC3339, spl[2])
+
+		return (isManual && isTime == nil)
+	}
+	return false
+}
+
 func templateHelperFunc() template.FuncMap {
 	return map[string]any{
-		"helper_str_title": strTitle,
-		"helper_to_string": toString,
+		"helper_str_title":        strTitle,
+		"helper_to_string":        toString,
+		"helper_is_my_collection": isMyCollection,
 	}
 }
 

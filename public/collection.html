@@ -28,6 +28,12 @@
                     <img src="/assets/download.svg" />
                 </a>
             </div>
+            {{ if helper_is_my_collection .Id }}
+                <div onclick="deleteMyCollection('{{.Id}}')" class="w-[25px] cursor-pointer">
+                    <img src="/assets/trash.svg" />
+                </div>
+            {{ end }}
+            
         </div>
         {{ end }}
     </div>
