@@ -15,6 +15,7 @@ import (
 	"github.com/go-co-op/gocron/v2"
 	"github.com/gosimple/slug"
 	"github.com/labstack/gommon/log"
+	"github.com/spf13/cast"
 )
 
 type CronjobHandler struct {
@@ -61,7 +62,8 @@ func (c *CronjobHandler) findTeamCollStack(team models.Team, tcolls []models.Tea
 }
 
 func (c *CronjobHandler) Run() {
-	c.cron.NewJob(gocron.DurationJob(30*time.Second), gocron.NewTask(func() {
+	ti := cast.ToInt(constants.TIMER_SYNC_TEAM_COLLECTION)
+	c.cron.NewJob(gocron.DurationJob(time.Duration(ti)*time.Second), gocron.NewTask(func() {
 		var ctx = context.Background()
 		var teams, err = c.repository.FetchAllTeams(ctx)
 		if err != nil {

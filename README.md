@@ -21,12 +21,12 @@
 
 Pull Images 
 ```shell
-docker pull blackmocca/hopp-api-doc:v1.1.0-linux-amd64 
+docker pull blackmocca/hopp-api-doc:v1.3.0-linux-amd64 
 ```
 
 Run Images
 ```shell
-docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart unless-stopped blackmocca/hopp-api-doc:v1.1.0-linux-amd64 
+docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart unless-stopped blackmocca/hopp-api-doc:v1.3.0-linux-amd64 
 ```
 
 ## Demo    
@@ -46,7 +46,8 @@ docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-f
 ## Environment
 | Name       | Description    |
 |-----------|------------|
-| DATABASE_URL  | connection string ของระบบฐานข้อมุล Postgresql      |
+| DATABASE_URL  | connection string Postgresql      |
+| TIMER_SYNC_TEAM_COLLECTION  | define sync team collection in unit `second` |
 | MICROSOFT_CLIENT_ID | Microsoft Oauth2 Client Id     |
 | MICROSOFT_CLIENT_SECRET| Microsoft Oauth2 Client Secret  |
 | MICROSOFT_CALLBACK_URL| Microsoft Oauth2 Valid Redirect `https://$yourdomain/v1/auth/microsoft/callback`|

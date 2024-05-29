@@ -347,6 +347,31 @@ func (h HttpHandler) ImportCollection(c echo.Context) error {
 	return h.MyCollection(c)
 }
 
+func (h HttpHandler) DeleteMycollection(c echo.Context) error {
+	var collectionId = c.Param("collection_id")
+	var dirPath = "./docs"
+	var fileInfo, err = ioutil.ReadDir(dirPath)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+
+	for _, file := range fileInfo {
+		if !file.IsDir() {
+			continue
+		}
+		if index := strings.Index(file.Name(), collectionId); index == -1 {
+			continue
+		}
+
+		path := filepath.Join(dirPath, file.Name())
+		if err := os.RemoveAll(path); err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		}
+	}
+
+	return h.MyCollection(c)
+}
+
 func (h HttpHandler) getMyCollection(userId string) ([]models.Team, error) {
 	var collections = make([]models.Team, 0)
 	var fileInfo, err = ioutil.ReadDir("./docs")
@@ -361,6 +386,9 @@ func (h HttpHandler) getMyCollection(userId string) ([]models.Team, error) {
 
 		split := strings.Split(file.Name(), "_")
 		if len(split) > 1 {
+			if !strings.EqualFold(userId, split[0]) {
+				continue
+			}
 			lastUpdated, err := time.Parse(time.RFC3339, split[2])
 			if err != nil {
 				return nil, err
