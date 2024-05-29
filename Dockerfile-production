@@ -23,7 +23,8 @@ ENV ADDR=0.0.0.0
 ENV TZ=Asia/Bangkok
 
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/tmp/app .
-COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/assets assets
+RUN mkdir -p ./assets
+RUN mkdir -p ./docs
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/public public
 COPY --from=0 /go/src/github.com/Blackmocca/hopp-api-doc/hopp-cli hopp-cli
 
