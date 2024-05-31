@@ -2,6 +2,7 @@ package methods
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,6 +10,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -145,6 +147,28 @@ func getSlug(data interface{}) string {
 	return slug.Make(data.(string))
 }
 
+func jsonPretty(data interface{}) string {
+	var str = cast.ToString(data)
+	if str == "" {
+		return str
+	}
+	if json.Valid([]byte(str)) {
+		var buf = bytes.Buffer{}
+		if err := json.Indent(&buf, []byte(str), "", "  "); err != nil {
+			return str
+		}
+		return buf.String()
+	}
+
+	return str
+}
+
+func isHTMLData(data string) bool {
+	re := regexp.MustCompile(`<.*?>`)
+
+	return re.MatchString(data)
+}
+
 func writeFile(path string, fs stuffbin.FileSystem) error {
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
@@ -199,6 +223,8 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 		"getRequestExamples":  getRequestExamples,
 		"getRequestVariables": getRequestVariables,
 		"getSlug":             getSlug,
+		"jsonPretty":          jsonPretty,
+		"isHTMLData":          isHTMLData,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")
