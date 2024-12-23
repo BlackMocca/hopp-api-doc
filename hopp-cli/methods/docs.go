@@ -182,6 +182,20 @@ func isHTMLData(data string) bool {
 	return re.MatchString(data)
 }
 
+func exists(data interface{}) bool {
+	if data == nil {
+		return false
+	}
+	switch reflect.TypeOf(data).Kind() {
+	case reflect.Slice:
+		return reflect.ValueOf(data).Len() > 0
+	case reflect.Struct:
+		return !reflect.ValueOf(data).IsNil()
+	default:
+		return !reflect.ValueOf(data).IsZero()
+	}
+}
+
 func writeFile(path string, fs stuffbin.FileSystem) error {
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return err
@@ -228,7 +242,7 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
-		"html":                func(val string) string { return val },
+		"html":                func(val interface{}) string { return cast.ToString(val) },
 		"isArray":             isArray,
 		"getDataType":         getDataType,
 		"tabStart":            tabStart,
@@ -238,6 +252,7 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 		"getSlug":             getSlug,
 		"jsonPretty":          jsonPretty,
 		"isHTMLData":          isHTMLData,
+		"exists":              exists,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

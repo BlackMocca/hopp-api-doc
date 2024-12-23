@@ -12,11 +12,13 @@
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>Authorization</td>
         <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        <td>{{ .Property.Auth.Description | html }}</td>
         </tr>
         </table>
     {{- end -}}
@@ -26,11 +28,13 @@
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Key | html}}`</td>
         <td>`{{- .Property.Auth.Value | html}}`</td>
+        <td>{{ .Property.Auth.Description | html }}</td>
         </tr>
         </table>
     {{- end -}}
@@ -40,11 +44,13 @@
         <th>AddTo</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Username | html}}`</td>
         <td>`{{- .Property.Auth.Password | html}}`</td>
+        <td>{{ .Property.Auth.Description | html }}</td>
         </tr>
         </table>
     {{- end -}}
@@ -56,11 +62,13 @@
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Property.Headers -}}
     <tr>
     <td>`{{- .Key | html -}}`</td>
     <td>`{{- .Value | html -}}`</td>
+    <td>{{- .Description | html -}}</td>
     </tr>
     {{- end -}}
     </table>
@@ -84,11 +92,13 @@
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Headers}}
     <tr>
     <td>{{- .Key | html}}</td>
     <td>`{{- .Value | html }}`</td>
+    <td>{{- .Description | html }}</td>
     </tr>
     {{- end -}}
     </table>
@@ -100,12 +110,14 @@
     <th>Key</th>
     <th>Type</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
     <td><code>{{- getDataType .value}}</code></td>
-    <td>`{{- if .value }}{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- .description | html}}</td>
     </tr>
     {{-  end}}
     </table>
@@ -190,7 +202,33 @@ Password: `{{ .Pass}}`
 
 {{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
-**Response Header** 
+
+**Request Variable**
+
+**Request Header**
+
+**Request QueryParams**
+
+**Request Body**
+
+
+**Response Header**
+{{- exists .Headers -}}
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        {{- range .Headers -}}
+        <tr>
+            <td>{{- .Key | html -}}</td>
+            <td>{{- .Value | html -}}</td>
+            <td>{{- .Description | html -}}</td>
+        </tr>
+        {{- end -}}
+    </table>
+{{- exists .Headers -}}
 
 
 **Response Body**
@@ -241,11 +279,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>Authorization</td>
         <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -255,11 +295,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Key | html}}`</td>
         <td>`{{- .Property.Auth.Value | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -269,11 +311,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Username | html}}`</td>
         <td>`{{- .Property.Auth.Password | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -286,11 +330,13 @@ Password: `{{ .Pass}}`
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Property.Headers -}}
     <tr>
     <td>`{{- .Key | html -}}`</td>
     <td>`{{- .Value | html -}}`</td>
+    <td>{{- .Description | html -}}</td>
     </tr>
     {{- end -}}
     </table>
@@ -313,11 +359,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>Authorization</td>
         <td>`{{ .Property.Auth.AuthType | html}}{{" "}}{{- .Property.Auth.Token | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -327,11 +375,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Key</th>
         <th>Value</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Key | html}}`</td>
         <td>`{{- .Property.Auth.Value | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -341,11 +391,13 @@ Password: `{{ .Pass}}`
         <th>AddTo</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Description</th>
         </tr>
         <tr>
         <td>{{ .Property.Auth.AddTo | html }}</td>
         <td>`{{ .Property.Auth.Username | html}}`</td>
         <td>`{{- .Property.Auth.Password | html}}`</td>
+        <td>{{ .Property.Auth.Description | html}}</td>
         </tr>
         </table>
     {{- end -}}
@@ -358,11 +410,13 @@ Password: `{{ .Pass}}`
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Property.Headers -}}
     <tr>
     <td>`{{- .Key | html -}}`</td>
     <td>`{{- .Value | html -}}`</td>
+    <td>{{ .Description | html}}</td>
     </tr>
     {{- end -}}
     </table>
@@ -387,11 +441,13 @@ Password: `{{ .Pass}}`
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Headers}}
     <tr>
     <td>{{- .Key | html}}</td>
     <td>`{{- .Value | html}}`</td>
+    <td>{{- .Description | html}}</td>
     </tr>
     {{- end -}}
     </table>
@@ -403,12 +459,14 @@ Password: `{{ .Pass}}`
     <th>Key</th>
     <th>Type</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
     <td><code>{{- getDataType .value}}</code></td>
     <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- .description | html}}</td>
     </tr>
     {{-  end}}
     </table>
@@ -567,11 +625,13 @@ Password: `{{ .Pass}}`
     <tr>
     <th>Key</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Headers}}
     <tr>
     <td>{{- .Key | html}}</td>
     <td>`{{- .Value | html}}`</td>
+    <td>{{- .Description | html}}</td>
     </tr>
     {{- end -}}
     </table>
@@ -583,12 +643,14 @@ Password: `{{ .Pass}}`
     <th>Key</th>
     <th>Type</th>
     <th>Value</th>
+    <th>Description</th>
     </tr>
     {{- range .Params}}
     <tr>
     <td>`{{- .key | html}}`</td>
     <td><code>{{- getDataType .value}}</code></td>
     <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- .description | html}}</td>
     </tr>
     {{-  end}}
     </table>

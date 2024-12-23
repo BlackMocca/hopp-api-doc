@@ -165,9 +165,10 @@ func (f *FolderProperties) UnmarshalJSON(data []byte) error {
 }
 
 type AuthType struct {
-	Key   string `json:"key"`
-	AddTo string `json:"addTo"`
-	Value string `json:"value"`
+	Key         string `json:"key"`
+	AddTo       string `json:"addTo"`
+	Value       string `json:"value"`
+	Description string `json:"description"`
 
 	// value enum => none,inherit,bearer
 	AuthType string `json:"authType"`
@@ -184,8 +185,9 @@ type AuthType struct {
 
 // BodyParams include the Body Parameters
 type BodyParams struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key         string `json:"key"`
+	Value       string `json:"value"`
+	Description string `json:"description"`
 }
 
 type Body struct {
@@ -339,7 +341,7 @@ type ExampleResponse struct {
 
 type ExampleResponses []ExampleResponse
 
-func (r ExampleResponses) UnmarshalJSON(rawdata []byte) error {
+func (r *ExampleResponses) UnmarshalJSON(rawdata []byte) error {
 	if len(rawdata) == 0 {
 		return nil
 	}
@@ -351,7 +353,7 @@ func (r ExampleResponses) UnmarshalJSON(rawdata []byte) error {
 		return nil
 	}
 
-	r = make([]ExampleResponse, 0, len(m))
+	*r = make([]ExampleResponse, 0, len(m))
 
 	for exampleName, requestDataM := range m {
 		ptr := ExampleResponse{
@@ -367,11 +369,12 @@ func (r ExampleResponses) UnmarshalJSON(rawdata []byte) error {
 			return err
 		}
 
-		r = append(r, ptr)
+		*r = append(*r, ptr)
 	}
 
-	sort.Slice(r, func(i, j int) bool {
-		return r[i].Status < r[j].Status
+	sort.Slice((*r), func(i, j int) bool {
+		return (*r)[i].Status < (*r)[j].Status
 	})
+
 	return nil
 }
