@@ -9,7 +9,7 @@
 - [✅] Filter Team Collection By User
 - [✅] Download API Document With Zip (can be serve with [Docsify CLI](https://docsify.js.org/#/) in your local)
 - [✅] Example Body Response (format `EXAMPLE_$status_$name`)
-- [✅] Support Request Body Content-Type (`applicatioon/json`, `multipart/form-data`, `application/x-www-form-urlencoded`)
+- [✅] Support Request Body Content-Type (`applicatioon/json`, `multipart/form-data`, `application/x-www-form-urlencoded`, `application/xml`, `text/xml`)
 - [✅] Request & Collection Support Header And Auth Type `Basic Auth`, `API KEY`, `Bearer Token`
 
 - [✅] Import Hoppscotch Collection to generate Document 

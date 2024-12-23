@@ -152,7 +152,7 @@ Password: `{{ .Pass}}`
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{- if .Body.Body }}
-{{ .Body.Body | jsonPretty | html }}
+{{ .Body.Body | prettyFormat | html }}
 {{- end }}
 ```
 {{ end -}}
@@ -169,7 +169,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -188,12 +188,21 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
 {{- end -}}
+
+{{- if (contains .Body.ContentType "xml") -}}
+{{- if .Body.Body }}
+```xml 
+{{ .Body.Body | prettyFormat | html }}
+```
+{{- end }}
+{{- end -}}
+
 
 <!-- Start Folder/Request Request Variable -->
 {{- if getRequestExamples .RequestVariable .ExampleResponses -}}
@@ -269,7 +278,7 @@ Password: `{{ .Pass}}`
 {{ if or (eq .OriginalRequest.Body.ContentType "application/json") ( eq .OriginalRequest.Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .OriginalRequest.Body.Body }}
-{{ .OriginalRequest.Body.Body | jsonPretty | html }}
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
 {{ end }}
 ```
 {{ end }}
@@ -286,7 +295,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -306,12 +315,20 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
 <p></p>
+{{- end -}}
+
+{{- if (contains .OriginalRequest.Body.ContentType "xml") -}}
+{{- if .OriginalRequest.Body.Body }}
+```xml
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
+```
+{{- end }}
 {{- end -}}
 
 
@@ -339,7 +356,7 @@ Password: `{{ .Pass}}`
 <!-- Level 1 Example Response Body -->
 **Body:**
 ```json
-{{ .Response | jsonPretty | html }}
+{{ .Response | prettyFormat | html }}
 ```
 
 {{- end -}}
@@ -626,7 +643,7 @@ Password: `{{ .Pass}}`
 {{ if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .Body.Body }}
-{{ .Body.Body | jsonPretty | html }}
+{{ .Body.Body | prettyFormat | html }}
 {{ end }}
 ```
 {{ end }}
@@ -643,7 +660,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -663,13 +680,22 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
 <p></p>
 {{- end -}}
+
+{{- if (contains .Body.ContentType "xml") -}}
+{{- if .Body.Body }}
+```xml
+{{ .Body.Body | prettyFormat | html }}
+```
+{{- end }}
+{{- end -}}
+
 
 <!-- Start Folder/Request Request Variable -->
 {{- if getRequestExamples .RequestVariable .ExampleResponses -}}
@@ -747,7 +773,7 @@ Password: `{{ .Pass}}`
 {{ if or (eq .OriginalRequest.Body.ContentType "application/json") ( eq .OriginalRequest.Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .OriginalRequest.Body.Body }}
-{{ .OriginalRequest.Body.Body | jsonPretty | html }}
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
 {{ end }}
 ```
 {{ end }}
@@ -764,7 +790,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -784,13 +810,22 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
 <p></p>
 {{- end -}}
+
+{{- if (contains .OriginalRequest.Body.ContentType "xml") -}}
+{{- if .OriginalRequest.Body.Body }}
+```xml
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
+```
+{{- end }}
+{{- end -}}
+
 
 
 <!-- Level 3 Example Response Header -->
@@ -817,7 +852,7 @@ Password: `{{ .Pass}}`
 <!-- Level 3 Example Response Body -->
 **Body:**
 ```json
-{{ .Response | jsonPretty | html }}
+{{ .Response | prettyFormat | html }}
 ```
 
 {{- end -}}
@@ -942,7 +977,7 @@ Password: `{{ .Pass}}`
 {{- if or (eq .Body.ContentType "application/json") ( eq .Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{- if .Body.Body }}
-{{ .Body.Body | jsonPretty | html }}
+{{ .Body.Body | prettyFormat | html }}
 {{- end }}
 ```
 {{ end -}}
@@ -959,7 +994,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -978,11 +1013,19 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
+{{- end -}}
+
+{{- if (contains .Body.ContentType "xml") -}}
+{{- if .Body.Body }}
+```xml
+{{ .Body.Body | prettyFormat | html }}
+```
+{{- end }}
 {{- end -}}
 
 <!-- Start Folder/Request Request Variable -->
@@ -1059,7 +1102,7 @@ Password: `{{ .Pass}}`
 {{ if or (eq .OriginalRequest.Body.ContentType "application/json") ( eq .OriginalRequest.Body.ContentType "application/json; charset=utf-8") }}
 ```json
 {{ if .OriginalRequest.Body.Body }}
-{{ .OriginalRequest.Body.Body | jsonPretty | html }}
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
 {{ end }}
 ```
 {{ end }}
@@ -1076,7 +1119,7 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
@@ -1096,13 +1139,22 @@ Password: `{{ .Pass}}`
         <tr>
         <td><code>{{- .key | html }}</code></td>
         <td><code>{{- getDataType .value}}</code></td>
-        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | prettyFormat | html}} {{- end}}</code></td>
         </tr>
         {{- end }}
     {{- end }}
     </table>
 <p></p>
 {{- end -}}
+
+{{- if (contains .OriginalRequest.Body.ContentType "xml") -}}
+{{- if .OriginalRequest.Body.Body }}
+```xml
+{{ .OriginalRequest.Body.Body | prettyFormat | html }}
+```
+{{- end }}
+{{- end -}}
+
 
 
 <!-- Level 2 Example Response Header -->
@@ -1129,7 +1181,7 @@ Password: `{{ .Pass}}`
 <!-- Level 2 Example Response Body -->
 **Body:**
 ```json
-{{ .Response | jsonPretty | html }}
+{{ .Response | prettyFormat | html }}
 ```
 
 {{- end -}}

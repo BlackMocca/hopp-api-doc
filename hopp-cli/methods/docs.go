@@ -160,7 +160,7 @@ func getSlug(data interface{}) string {
 	return slug.Make(data.(string))
 }
 
-func jsonPretty(data interface{}) string {
+func prettyFormat(data interface{}) string {
 	var str = cast.ToString(data)
 	if str == "" {
 		return str
@@ -250,9 +250,10 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 		"getRequestExamples":  getRequestExamples,
 		"getRequestVariables": getRequestVariables,
 		"getSlug":             getSlug,
-		"jsonPretty":          jsonPretty,
+		"prettyFormat":        prettyFormat,
 		"isHTMLData":          isHTMLData,
 		"exists":              exists,
+		"contains":            strings.Contains,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")
