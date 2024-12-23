@@ -4,6 +4,7 @@
 ```
 
 ## Feature
+- [✅] Support Example Response on version Hoppscotch version >= 2024.9.0 
 - [✅] Auto Generate API Document `Every 30 second`
 - [✅] Authenticate With Microsoft 
 - [✅] Filter Team Collection By User
@@ -21,12 +22,12 @@
 
 Pull Images 
 ```shell
-docker pull blackmocca/hopp-api-doc:v1.2.1-linux-amd64 
+docker pull blackmocca/hopp-api-doc:v1.3.0-linux-amd64
 ```
 
 Run Images
 ```shell
-docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart unless-stopped blackmocca/hopp-api-doc:v1.2.1-linux-amd64 
+docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-file=.env -d --restart unless-stopped blackmocca/hopp-api-doc:v1.3.0-linux-amd64
 ```
 
 ## Demo    
@@ -34,8 +35,7 @@ docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-f
 - Demo Collection Property to Show Auth Type 
 ![Folder Properties](assets/demo/example_folder.png)
 
-- Demo Input Example Response 
-(format `EXAMPLE_$status_$name`)
+- (Deprecated on version 1.3.0) Demo Input Example Response(format `EXAMPLE_$status_$name`)
 ![Input Example Response](assets/demo/example_input_example_response.png)
 ![Demo Example Response](assets/demo/example_request_body.png)
 
