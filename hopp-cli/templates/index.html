@@ -11,11 +11,36 @@
 <body>
   <div id="app"></div>
   <script>
+    function navigate(id) {
+      
+    }
     document.addEventListener('DOMContentLoaded', function() {
-      var index = window.location.toString().indexOf("?id=")
-      if (index !== -1 ) {
-        window.location.href = window.location.toString().substr(0, index)
-      }
+        // Check if the URL contains the ?id= parameter
+        var idIndex = window.location.toString().indexOf("?id=");
+        if (idIndex !== -1) {
+            // Extract the id value
+            const queryParams = new URLSearchParams(new URL(document.location.toString()).hash.substr(2));
+            const id = queryParams.get('id');
+            const host = window.location.toString().substr(0, idIndex);
+            
+            window.location.href = `${host}?ref=${id}`;
+        }
+
+        // After redirection, check if the URL contains the ref query parameter
+        const refIndex = window.location.toString().indexOf("?ref=");
+        if (refIndex !== -1) {
+            const queryParams = new URLSearchParams(new URL(document.location.toString()).hash.substr(2));
+            const ref = queryParams.get('ref');
+            
+            setTimeout(() => {
+              const links = document.getElementsByTagName("a"); 
+              Array.from(links).forEach(link => {
+                  if (link.getAttribute("href") === `#/?id=${ref}`) {
+                      link.click();
+                  }
+              });
+            }, 300)
+        }
     });
 
     function getBasePath() {
