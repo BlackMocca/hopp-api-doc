@@ -184,11 +184,11 @@ Password: `{{ .Pass}}`
 {{- end -}}
 
 <!-- Start Folder/Request Request Variable -->
-{{- if getRequestExamples .RequestVariable -}}
+{{- if getRequestExamples .RequestVariable .ExampleResponses -}}
 {{ tabStart | html }}
 **Example Response**
 
-{{- range getRequestExamples .RequestVariable -}}
+{{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
 **Response Header** 
 
@@ -508,12 +508,12 @@ Password: `{{ .Pass}}`
 {{- end -}}
 
 <!-- Start Folder/Request Request Variable -->
-{{- if getRequestExamples .RequestVariable -}}
+{{- if getRequestExamples .RequestVariable .ExampleResponses -}}
 {{ tabStart | html }}
 
 **Example Response**
 
-{{- range getRequestExamples .RequestVariable -}}
+{{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
 **Response Header** 
 
@@ -685,11 +685,11 @@ Password: `{{ .Pass}}`
 {{- end -}}
 
 <!-- Start Folder/Request Request Variable -->
-{{- if getRequestExamples .RequestVariable -}}
+{{- if getRequestExamples .RequestVariable .ExampleResponses -}}
 {{ tabStart | html }}
 **Example Response**
 
-{{- range getRequestExamples .RequestVariable -}}
+{{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
 **Response Header** 
 

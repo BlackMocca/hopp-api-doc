@@ -52,15 +52,28 @@ func isArray(data interface{}) bool {
 	}
 }
 
-func getRequestExamples(data interface{}) []ExampleResponse {
+func getRequestExamples(exampleFromVariable interface{}, exampleResponse interface{}) []ExampleResponse {
 	var examples = make([]ExampleResponse, 0)
-	if v, ok := data.([]RequestVariable); ok && len(v) > 0 {
-		for _, item := range v {
-			if len(item.Examples) > 0 {
-				examples = append(examples, item.Examples...)
+
+	if exampleResponse != nil {
+		if v, ok := exampleResponse.(ExampleResponses); ok && len(v) > 0 {
+			examples = v
+		}
+	}
+
+	// (deprecate) will using this code if not create example response
+	if exampleFromVariable != nil {
+		if v, ok := exampleFromVariable.([]RequestVariable); ok && len(v) > 0 && len(examples) == 0 {
+			for _, item := range v {
+				if len(item.Examples) > 0 {
+					for _, example := range item.Examples {
+						examples = append(examples, example.ToExampleResponse())
+					}
+				}
 			}
 		}
 	}
+
 	return examples
 }
 

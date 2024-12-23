@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"regexp"
+	"sort"
 	"strings"
 
 	"github.com/spf13/cast"
@@ -67,8 +68,9 @@ type Folders struct {
 
 // Headers are the Request Headers
 type Headers struct {
-	Key   string `json:"key"`
-	Value string `json:"value"`
+	Key         string `json:"key"`
+	Value       string `json:"value"`
+	Description string `json:"description"`
 }
 
 // Requests are the Request Model in JSON
@@ -103,6 +105,8 @@ type Requests struct {
 	PreRequestScript string            `json:"preRequestScript"`
 	TestScript       string            `json:"testScript"`
 	RequestVariable  []RequestVariable `json:"requestVariables"`
+	// Example Response
+	ExampleResponses ExampleResponses `json:"responses"`
 	// Label of Collection
 	Label string `json:"label"`
 	// Name of the Request
@@ -243,9 +247,9 @@ func (b *Body) UnmarshalJSON(data []byte) error {
 }
 
 type RequestVariable struct {
-	Key      string            `json:"key"`
-	Value    string            `json:"value"`
-	Examples []ExampleResponse `json:"-"`
+	Key      string                    `json:"key"`
+	Value    string                    `json:"value"`
+	Examples []VariableExampleResponse `json:"-"`
 }
 
 type RequestVariables []RequestVariable
@@ -262,14 +266,14 @@ func (r RequestVariables) GetRequestVariables() []RequestVariable {
 	return requests
 }
 
-func newExampleResponseFromText(key string, response string) *ExampleResponse {
+func newVariableExampleResponseFromText(key string, response string) *VariableExampleResponse {
 	splits := strings.Split(key, "_")
 	if len(splits) > 2 && splits[0] == "EXAMPLE" {
 		status := cast.ToInt(splits[1])
 		name := strings.Join(splits[2:], " ")
 
 		if status > 0 && name != "" {
-			return &ExampleResponse{
+			return &VariableExampleResponse{
 				Status:   status,
 				Name:     name,
 				Response: response,
@@ -293,11 +297,11 @@ func (b *RequestVariable) UnmarshalJSON(data []byte) error {
 	b.Key = tmp.Key
 	b.Value = tmp.Value
 	if len(b.Examples) == 0 {
-		b.Examples = make([]ExampleResponse, 0)
+		b.Examples = make([]VariableExampleResponse, 0)
 	}
 
 	if tmp.Key != "" {
-		if exampleResponse := newExampleResponseFromText(tmp.Key, tmp.Value); exampleResponse != nil {
+		if exampleResponse := newVariableExampleResponseFromText(tmp.Key, tmp.Value); exampleResponse != nil {
 			b.Examples = append(b.Examples, *exampleResponse)
 		}
 	}
@@ -305,8 +309,69 @@ func (b *RequestVariable) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-type ExampleResponse struct {
+type VariableExampleResponse struct {
 	Status   int
 	Name     string
 	Response string
+}
+
+func (v VariableExampleResponse) ToExampleResponse() ExampleResponse {
+	return ExampleResponse{
+		Status:   v.Status,
+		Name:     v.Name,
+		Response: v.Response,
+	}
+}
+
+type ExampleResponse struct {
+	// ชื่อ
+	Name string `json:"name"`
+	// HttpStatus
+	Status int `json:"code"`
+
+	// HttpHeader
+	Headers []Headers `json:"headers"`
+	// Response body
+	Response string `json:"body"`
+
+	OriginalRequest Requests `json:"originalRequest"`
+}
+
+type ExampleResponses []ExampleResponse
+
+func (r ExampleResponses) UnmarshalJSON(rawdata []byte) error {
+	if len(rawdata) == 0 {
+		return nil
+	}
+	var m map[string]interface{}
+	if err := json.Unmarshal(rawdata, &m); err != nil {
+		return err
+	}
+	if len(m) == 0 {
+		return nil
+	}
+
+	r = make([]ExampleResponse, 0, len(m))
+
+	for exampleName, requestDataM := range m {
+		ptr := ExampleResponse{
+			Name: exampleName,
+		}
+
+		bu, err := json.Marshal(requestDataM)
+		if err != nil {
+			return err
+		}
+
+		if err := json.Unmarshal(bu, &ptr); err != nil {
+			return err
+		}
+
+		r = append(r, ptr)
+	}
+
+	sort.Slice(r, func(i, j int) bool {
+		return r[i].Status < r[j].Status
+	})
+	return nil
 }
