@@ -679,10 +679,143 @@ Password: `{{ .Pass}}`
 
 {{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
-**Response Header** 
 
 
-**Response Body**
+<!-- Level 3 Example Request Variable -->
+<h3>Request</h3>
+<hr>
+
+{{- if exists (getRequestVariables .OriginalRequest.RequestVariable) }}
+<strong>Variable:</strong>
+    <table>
+        <tr>
+        <th>Type</th>
+        <th>Value</th> 
+        </tr>
+        {{- range getRequestVariables .OriginalRequest.RequestVariable -}}
+        <tr>
+        <td><code>{{ .Key | html}}</code></td>
+        <td><code>{{ .Value | html }}</code></td>
+        </tr>
+        {{- end -}}
+    </table>
+{{- end }}
+
+<!-- Level 3 Example Request QueryParams -->
+{{- if exists (.OriginalRequest.Params) }}
+**QueryParams:**
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>Description</th>
+    </tr>
+    {{- range .OriginalRequest.Params -}}
+    <tr>
+    <td>`{{- .key | html}}`</td>
+    <td><code>{{- getDataType .value}}</code></td>
+    <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- .description | html}}</td>
+    </tr>
+    {{-  end -}}
+    </table>
+{{- end }}
+    
+
+<!-- Level 3 Example Request QueryParams -->
+{{- if exists (.OriginalRequest.Headers) }}
+**Header:**
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Value</th>
+    <th>Description</th>
+    </tr>
+    {{- range .OriginalRequest.Headers -}}
+    <tr>
+    <td>`{{- .Key | html -}}`</td>
+    <td>`{{- .Value | html -}}`</td>
+    <td>{{- .Description | html -}}</td>
+    </tr>
+    {{- end -}}
+    </table>
+{{- end }}
+
+<!-- Level 3 Example Request Body -->
+**Body:**
+{{ if or (eq .OriginalRequest.Body.ContentType "application/json") ( eq .OriginalRequest.Body.ContentType "application/json; charset=utf-8") }}
+```json
+{{ if .OriginalRequest.Body.Body }}
+{{ .OriginalRequest.Body.Body | jsonPretty | html }}
+{{ end }}
+```
+{{ end }}
+
+{{- if eq .OriginalRequest.Body.ContentType "multipart/form-data" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .OriginalRequest.Body.Body }}
+        {{- range .OriginalRequest.Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+<p></p>
+{{- end -}}
+
+{{- if eq .OriginalRequest.Body.ContentType "application/x-www-form-urlencoded" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .OriginalRequest.Body.Body }}
+        {{- range .OriginalRequest.Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- getDataType .value}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+<p></p>
+{{- end -}}
+
+
+<!-- Level 3 Example Response Header -->
+<h3>Response</h3>
+<hr>
+
+**Header:**
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        {{- range .Headers -}}
+        <tr>
+            <td>{{- .Key | html -}}</td>
+            <td>{{- .Value | html -}}</td>
+            <td>{{- .Description | html -}}</td>
+        </tr>
+        {{- end -}}
+    </table>
+
+
+<!-- Level 3 Example Response Body -->
+**Body:**
 ```json
 {{ .Response | jsonPretty | html }}
 ```
@@ -859,10 +992,142 @@ Password: `{{ .Pass}}`
 
 {{- range getRequestExamples .RequestVariable .ExampleResponses -}}
 #### **{{ .Status }} {{.Name | html}}**
-**Response Header** 
+
+<!-- Level 2 Example Request Variable -->
+<h3>Request</h3>
+<hr>
+
+{{- if exists (getRequestVariables .OriginalRequest.RequestVariable) }}
+<strong>Variable:</strong>
+    <table>
+        <tr>
+        <th>Type</th>
+        <th>Value</th> 
+        </tr>
+        {{- range getRequestVariables .OriginalRequest.RequestVariable -}}
+        <tr>
+        <td><code>{{ .Key | html}}</code></td>
+        <td><code>{{ .Value | html }}</code></td>
+        </tr>
+        {{- end -}}
+    </table>
+{{- end }}
+
+<!-- Level 2 Example Request QueryParams -->
+{{- if exists (.OriginalRequest.Params) }}
+**QueryParams:**
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    <th>Description</th>
+    </tr>
+    {{- range .OriginalRequest.Params -}}
+    <tr>
+    <td>`{{- .key | html}}`</td>
+    <td><code>{{- getDataType .value}}</code></td>
+    <td>{{- if .value }}`{{ .value | html }}`{{ else }} {{ end }}</td>
+    <td>{{- .description | html}}</td>
+    </tr>
+    {{-  end -}}
+    </table>
+{{- end }}
+    
+
+<!-- Level 2 Example Request QueryParams -->
+{{- if exists (.OriginalRequest.Headers) }}
+**Header:**
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Value</th>
+    <th>Description</th>
+    </tr>
+    {{- range .OriginalRequest.Headers -}}
+    <tr>
+    <td>`{{- .Key | html -}}`</td>
+    <td>`{{- .Value | html -}}`</td>
+    <td>{{- .Description | html -}}</td>
+    </tr>
+    {{- end -}}
+    </table>
+{{- end }}
+
+<!-- Level 2 Example Request Body -->
+**Body:**
+{{ if or (eq .OriginalRequest.Body.ContentType "application/json") ( eq .OriginalRequest.Body.ContentType "application/json; charset=utf-8") }}
+```json
+{{ if .OriginalRequest.Body.Body }}
+{{ .OriginalRequest.Body.Body | jsonPretty | html }}
+{{ end }}
+```
+{{ end }}
+
+{{- if eq .OriginalRequest.Body.ContentType "multipart/form-data" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .OriginalRequest.Body.Body }}
+        {{- range .OriginalRequest.Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- if .isFile }} @file {{ else }} {{ getDataType .value }} {{- end }}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+<p></p>
+{{- end -}}
+
+{{- if eq .OriginalRequest.Body.ContentType "application/x-www-form-urlencoded" -}}
+    <table>
+    <tr>
+    <th>Key</th>
+    <th>Type</th>
+    <th>Value</th>
+    </tr>
+    {{- if isArray .OriginalRequest.Body.Body }}
+        {{- range .OriginalRequest.Body.Body }}
+        <tr>
+        <td><code>{{- .key | html }}</code></td>
+        <td><code>{{- getDataType .value}}</code></td>
+        <td><code>{{- if isHTMLData .value}} `{{- .value | html}}` {{ else }} {{- .value | jsonPretty | html}} {{- end}}</code></td>
+        </tr>
+        {{- end }}
+    {{- end }}
+    </table>
+<p></p>
+{{- end -}}
 
 
-**Response Body**
+<!-- Level 2 Example Response Header -->
+<h3>Response</h3>
+<hr>
+
+**Header:**
+    <table>
+        <tr>
+            <th>Key</th>
+            <th>Value</th>
+            <th>Description</th>
+        </tr>
+        {{- range .Headers -}}
+        <tr>
+            <td>{{- .Key | html -}}</td>
+            <td>{{- .Value | html -}}</td>
+            <td>{{- .Description | html -}}</td>
+        </tr>
+        {{- end -}}
+    </table>
+
+
+<!-- Level 2 Example Response Body -->
+**Body:**
 ```json
 {{ .Response | jsonPretty | html }}
 ```
