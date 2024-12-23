@@ -9,7 +9,7 @@
 - [✅] Filter Team Collection By User
 - [✅] Download API Document With Zip (can be serve with [Docsify CLI](https://docsify.js.org/#/) in your local)
 - [✅] Example Body Response (format `EXAMPLE_$status_$name`)
-- [✅] Support Request Body Content-Type (`applicatioon/json`, `multipart/form-data`, `application/x-www-form-urlencoded`)
+- [✅] Support Request Body Content-Type (`applicatioon/json`, `multipart/form-data`, `application/x-www-form-urlencoded`, `application/xml`, `text/xml`)
 - [✅] Request & Collection Support Header And Auth Type `Basic Auth`, `API KEY`, `Bearer Token`
 
 - [✅] Import Hoppscotch Collection to generate Document 
@@ -46,7 +46,7 @@ docker run --name hopp-api-doc -v ${pwd}/docs:/usr/app/docs -p 3200:3000 --env-f
 ## Environment
 | Name       | Description    |
 |-----------|------------|
-| DATABASE_URL  | connection string Postgresql      |
+| DATABASE_URL  | connection string Postgresql self host hoppscotch backend     |
 | TIMER_SYNC_TEAM_COLLECTION  | define sync team collection in unit `second` |
 | MICROSOFT_CLIENT_ID | Microsoft Oauth2 Client Id     |
 | MICROSOFT_CLIENT_SECRET| Microsoft Oauth2 Client Secret  |

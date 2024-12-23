@@ -52,15 +52,28 @@ func isArray(data interface{}) bool {
 	}
 }
 
-func getRequestExamples(data interface{}) []ExampleResponse {
+func getRequestExamples(exampleFromVariable interface{}, exampleResponse interface{}) []ExampleResponse {
 	var examples = make([]ExampleResponse, 0)
-	if v, ok := data.([]RequestVariable); ok && len(v) > 0 {
-		for _, item := range v {
-			if len(item.Examples) > 0 {
-				examples = append(examples, item.Examples...)
+
+	if exampleResponse != nil {
+		if v, ok := exampleResponse.(ExampleResponses); ok && len(v) > 0 {
+			examples = v
+		}
+	}
+
+	// (deprecate) will using this code if not create example response
+	if exampleFromVariable != nil {
+		if v, ok := exampleFromVariable.([]RequestVariable); ok && len(v) > 0 && len(examples) == 0 {
+			for _, item := range v {
+				if len(item.Examples) > 0 {
+					for _, example := range item.Examples {
+						examples = append(examples, example.ToExampleResponse())
+					}
+				}
 			}
 		}
 	}
+
 	return examples
 }
 
@@ -147,7 +160,7 @@ func getSlug(data interface{}) string {
 	return slug.Make(data.(string))
 }
 
-func jsonPretty(data interface{}) string {
+func prettyFormat(data interface{}) string {
 	var str = cast.ToString(data)
 	if str == "" {
 		return str
@@ -167,6 +180,20 @@ func isHTMLData(data string) bool {
 	re := regexp.MustCompile(`<.*?>`)
 
 	return re.MatchString(data)
+}
+
+func exists(data interface{}) bool {
+	if data == nil {
+		return false
+	}
+	switch reflect.TypeOf(data).Kind() {
+	case reflect.Slice:
+		return reflect.ValueOf(data).Len() > 0
+	case reflect.Struct:
+		return !reflect.ValueOf(data).IsNil()
+	default:
+		return !reflect.ValueOf(data).IsZero()
+	}
 }
 
 func writeFile(path string, fs stuffbin.FileSystem) error {
@@ -215,7 +242,7 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 
 	// FuncMap for the HTML template
 	fmap := map[string]interface{}{
-		"html":                func(val string) string { return val },
+		"html":                func(val interface{}) string { return cast.ToString(val) },
 		"isArray":             isArray,
 		"getDataType":         getDataType,
 		"tabStart":            tabStart,
@@ -223,8 +250,10 @@ func GenerateDocs(output string, exportPathfile string, servePort int, isOpenBro
 		"getRequestExamples":  getRequestExamples,
 		"getRequestVariables": getRequestVariables,
 		"getSlug":             getSlug,
-		"jsonPretty":          jsonPretty,
+		"prettyFormat":        prettyFormat,
 		"isHTMLData":          isHTMLData,
+		"exists":              exists,
+		"contains":            strings.Contains,
 	}
 
 	t, err := stuffbin.ParseTemplates(fmap, fs, "/template.md")

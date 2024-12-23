@@ -27,6 +27,8 @@ func NewProfileProviderWithParams(params map[string]interface{}) *ProfileProvide
 			profile.Username = strings.ToLower(cast.ToString(val))
 		case "userPrincipalName":
 			profile.Username = strings.ToLower(cast.ToString(val))
+		case "username":
+			profile.Username = strings.ToLower(cast.ToString(val))
 		case "given_name":
 			profile.Firstname = cast.ToString(val)
 		case "family_name":
