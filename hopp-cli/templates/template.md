@@ -195,13 +195,13 @@ Password: `{{ .Pass}}`
     </table>
 {{- end -}}
 
-{{- if (contains .Body.ContentType "xml") -}}
+{{- if (contains .Body.ContentType "xml") }}
 {{- if .Body.Body }}
 ```xml 
 {{ .Body.Body | prettyFormat | html }}
 ```
 {{- end }}
-{{- end -}}
+{{ end -}}
 
 
 <!-- Start Folder/Request Request Variable -->
@@ -688,13 +688,13 @@ Password: `{{ .Pass}}`
 <p></p>
 {{- end -}}
 
-{{- if (contains .Body.ContentType "xml") -}}
+{{- if (contains .Body.ContentType "xml") }}
 {{- if .Body.Body }}
 ```xml
 {{ .Body.Body | prettyFormat | html }}
 ```
 {{- end }}
-{{- end -}}
+{{ end -}}
 
 
 <!-- Start Folder/Request Request Variable -->
@@ -1020,13 +1020,13 @@ Password: `{{ .Pass}}`
     </table>
 {{- end -}}
 
-{{- if (contains .Body.ContentType "xml") -}}
+{{- if (contains .Body.ContentType "xml") }}
 {{- if .Body.Body }}
 ```xml
 {{ .Body.Body | prettyFormat | html }}
 ```
 {{- end }}
-{{- end -}}
+{{ end -}}
 
 <!-- Start Folder/Request Request Variable -->
 {{- if getRequestExamples .RequestVariable .ExampleResponses -}}
