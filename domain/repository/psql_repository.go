@@ -78,7 +78,7 @@ func (p psqlRepository) FetchAllTeamRequest(ctx context.Context, teamId string) 
 }
 
 func (p psqlRepository) fetchInfraConfigs(ctx context.Context, pattern string) ([]models.InfraConfig, error) {
-	sql := `SELECT id, name, value, active FROM "InfraConfig" WHERE name LIKE $1::text`
+	sql := `SELECT id, name, value FROM "InfraConfig" WHERE name LIKE $1::text`
 	rows, err := p.db.Query(ctx, sql, pattern)
 	if err != nil {
 		return nil, err
