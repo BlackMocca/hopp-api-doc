@@ -22,7 +22,7 @@
 
 Pull Images 
 ```shell
-docker pull blackmocca/hopp-api-doc:v1.3.1-linux-amd64
+docker pull blackmocca/hopp-api-doc:v1.3.2-linux-amd64
 ```
 
 Run Images
