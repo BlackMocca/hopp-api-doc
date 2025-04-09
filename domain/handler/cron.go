@@ -82,10 +82,10 @@ func (c *CronjobHandler) Run() {
 			colls, err := c.getExportCollection(ctx, team)
 			if err != nil {
 				log.Errorf("failed to get export collection: %s", err.Error())
-				return
+				continue
 			}
 			if len(colls) == 0 {
-				return
+				continue
 			}
 
 			/* process export into docs */
@@ -96,7 +96,7 @@ func (c *CronjobHandler) Run() {
 
 			if err := docs.GenerateDocs(pathOut, filePath, 0, false, "./hopp-cli/templates"); err != nil {
 				log.Errorf("failed to get export document: %s", err.Error())
-				return
+				continue
 			}
 
 			teamMetadata[team.Id] = map[string]interface{}{
